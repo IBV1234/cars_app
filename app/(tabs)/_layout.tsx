@@ -28,17 +28,45 @@ export default function TabLayout() {
       }}>
       <Tabs.Screen
         name="index"
-        options={{
+   options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
+        name="connection"
+        options={{href:null}} 
+        />
+
+           <Tabs.Screen
+        name="inscription"
+        options={{href:null}} 
+        />
+
+            <Tabs.Screen
+        name="profile"
+        options={{href:null}} 
+        />
+
+              {/* <Tabs.Screen
+        name="acceuil"
+        options={{href:null}} 
+        /> */}
+      <Tabs.Screen
         name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
+        options={{href:null}} 
+
+      />
+        <Tabs.Screen
+        name="carsMap"
+          options={{href:null}} 
+
+      />
+
+       <Tabs.Screen
+        name="details"
+          options={{href:null}} 
+
       />
     </Tabs>
   );

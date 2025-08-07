@@ -1,0 +1,46 @@
+import React, { useEffect } from 'react';
+import { Button, View, Text } from 'react-native';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
+
+WebBrowser.maybeCompleteAuthSession();
+
+export default function GoogleSignIn() {
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: 'VOTRE_CLIENT_ID_WEB.apps.googleusercontent.com',
+    androidClientId: 'VOTRE_CLIENT_ID_ANDROID.apps.googleusercontent.com',
+    iosClientId: 'VOTRE_CLIENT_ID_IOS.apps.googleusercontent.com',
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response;
+      console.log('Token:', authentication.accessToken);
+
+      // Tu peux appeler ton backend ici pour créer l’utilisateur
+      fetchUserInfo(authentication.accessToken);
+    }
+  }, [response]);
+
+  async function fetchUserInfo(token) {
+    const res = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const user = await res.json();
+    console.log('User Info:', user);
+  }
+
+  return (
+    <View>
+      <Button
+        disabled={!request}
+        title="S'inscrire avec Google"
+        onPress={() => promptAsync()}
+      />
+    </View>
+  );
+}
+
+
+IOS client id:953087995572-4h6bfbj4nlds70b9d0djdbgomjrco76m.apps.googleusercontent.com

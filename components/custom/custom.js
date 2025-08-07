@@ -1,0 +1,64 @@
+import { StyleSheet,Text, View, Pressable,Image } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from "react";
+import { useRouter } from "expo-router";
+
+export const Buttons = ({text, fonction}) => {
+    return (
+
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Pressable
+                style={{ marginTop: 10 }}
+                onPress={() => { fonction() }}
+            >
+                <LinearGradient
+                    style={styles.boutton}
+                    colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
+                    start={{ x: 0.5, y: 0 }}
+                    end={{ x: 0.1, y: 1.2 }}>
+                    <Text style={styles.text}>{text}</Text>
+
+                </LinearGradient>
+            </Pressable>
+
+        </View>
+    )
+}
+export const AffciherImage = ({ item, styles, mix ,loading, setLoading}) => {
+        const router = useRouter(); 
+
+    return (
+        <Pressable style={mix ? styles.imgCar2 : styles.imgCar}onPress={() => { router.push({ pathname: '/details', params: { item: JSON.stringify(item) } }) }}>
+            {loading ?
+                (<Image source={require('@/assets/images/loading-gif.webp')}  style={styles.iconCarsImage}        
+
+
+                />) 
+                : <Image source={item.lien} style={mix ? styles.iconCarsImage2 : styles.iconCarsImage} onLoadEnd={()=>setLoading(false)}
+
+                />}
+        </Pressable>
+    )
+}
+
+const styles = StyleSheet.create({
+    boutton: {
+        borderRadius: 20,
+        width: 230,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.4,
+        shadowRadius: 2,
+
+    },
+    text: {
+        alignContent: 'center',
+        fontSize: 15,
+        color: 'white',
+    }
+  
+});
+
