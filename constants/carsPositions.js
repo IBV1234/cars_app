@@ -1,9 +1,10 @@
 export const carsLocation = [
     {
-        id: 0,
+        id: 1,
         ownerName: "Noah Lefebvre",
         name: "BMW M4 Competition",
         image: require("../assets/images/bmwM4Competition_car.png"),
+        lien:15,
         city: "Laval",
         location: {
             latitude: 45.57294751538974,
@@ -13,10 +14,11 @@ export const carsLocation = [
         email: "noah.lefebvre@email.com",
     },
     {
-        id: 1,
+        id: 2,
         ownerName: "Jean Flex",
         name: "Mercedes AMG GT",
         image: require("../assets/images/mercedesAmgGt_car.png"),
+        lien:16,
         city: "Montréal",
         location: {
             latitude: 45.489013795142114,
@@ -26,10 +28,11 @@ export const carsLocation = [
         email: "jean.Flex@email.com",
     },
     {
-        id: 2,
+        id: 4,
         ownerName: "Léa Tremblay",
         name: "Volkswagen GTI Mk7",
         image: require("../assets/images/vwGtiMk7_car.png"),
+        lien:18,
         city: "Montréal",
         location: {
             latitude: 45.53606173316433,
@@ -39,10 +42,11 @@ export const carsLocation = [
         email: "lea.tremblay@email.com",
     },
     {
-        id: 3,
+        id: 5,
         ownerName: "Jules Gagnon",
         name: "Audi R8",
         image: require("../assets/images/audiR8_car.png"),
+        lien:19,
         city: "Montréal",
         location: {
             latitude: 45.49784186751103,
@@ -52,10 +56,11 @@ export const carsLocation = [
         email: "jules.gagnon@email.com",
     },
     {
-        id: 4,
+        id: 6,
         ownerName: "Emma Girard",
         name: "Porsche GT3 RS",
         image: require("../assets/images/porscheGt3Rs_car.png"),
+        lien:20,
         city: "Laval",
         location: {
             latitude: 45.56626580447386,
@@ -65,10 +70,11 @@ export const carsLocation = [
         email: "emma.girard@email.com",
     },
     {
-        id: 5,
+        id: 3,
         ownerName: "Marc Deval",
         name: "Honda Civic type r",
         image: require("../assets/images/hondaCivicTypeR_car.png"),
+        lien:17,
         city: "Laval",
         location: {
             latitude: 45.663903251207586,
@@ -77,4 +83,5 @@ export const carsLocation = [
         phone: "514-123-4567",
         email: "marc.deval@email.com",
     },
+ 
 ];

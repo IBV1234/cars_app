@@ -29,7 +29,7 @@ export default function Accueil() {
     const [loading, setLoading] = useState(true);
     const [numColumns, setNumColumns] = useState(2);
 
-
+   
     const getCarsData = (cardata) => {
         try {
             db.withTransactionSync(() => {
@@ -69,7 +69,7 @@ export default function Accueil() {
 
     useEffect(() => {
         if (carsData.length < 2) {
-            setNumColumns(1);
+            setNumColumns(1); // nombre de colonnes à 1 si moins de 2 voitures pour la recherche
         } else {
             setNumColumns(2);
         }
@@ -171,6 +171,7 @@ export default function Accueil() {
 
                         // can put code here
                         let mix = carsData.length < 2;
+                        
 
                         return (
                             <View style={[styles.ContainerCarsImg, { flex: 1, margin: 5 }]} >

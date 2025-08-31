@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from '@react-navigation/native';
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams ,useRouter} from "expo-router";
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View, Dimensions, Pressable, Image, ScrollView } from "react-native";
 
@@ -18,6 +18,7 @@ import { UserContex } from './connection';
 import { LikeContext } from './acceuil';
 
 import { toogleLike, addLink, formatNumberWithThousandsSeparator } from '@/fonctions/fonctions';
+import { carsLocation } from "@/constants/carsPositions";
 
 import * as Localization from "expo-localization";
 import { I18n } from "i18n-js";
@@ -30,36 +31,24 @@ export default function Details() {
     const { item } = useLocalSearchParams();
     const car = item ? JSON.parse(item) : null;
 
-    const [carsData, setCarsData] = useState([]);
     const { user, setUser } = useContext(UserContex);
     const { likeIds, setLikeIds } = useContext(LikeContext)
     const [loading, setLoading] = useState(true);
+    const [cars, setCars] = useState(carsLocation);
+    
 
-
-    useFocusEffect(
-        useCallback(() => {
-            if (car) {
-                const linked = addLink([car]); // met car dans un tableau
-                setCarsData(linked[0]); // extrait l’objet enrichi
-            }
-        }, [item])
-    );
+    
     useEffect(() => {
-    }, [carsData]);
+    }, [item]);
 
-    // const views = [];
-    // for (let i = 0; i < 5; i++) {
-    //     views.push(
-    //         <View key={i} style={styles.Options}>
-    //             <MaterialCommunityIcons name="horse-variant" size={24} color="black" />
-    //             <Text>Horse power {i + 1}</Text>
-    //         </View>
-    //     );
-    // }
+  
+    const func =()=>{
+        console.log('ok');
 
-    const pushMap = () => {
-        console.log("aller a map")
+        return null;
     }
+    
+    
     return (
         <LinearGradient style={styles.container}
             colors={['rgba(27, 26, 26, 0.8)', 'rgba(255, 247, 247, 0.5)']} // Rouge en haut, noir en bas
@@ -103,28 +92,28 @@ export default function Details() {
 
 
                 <View style={{ alignSelf: 'center', gap: 10 }}>
-                    <Image source={carsData.lien} style={styles.containerImage} />
-                    <Text style={{ alignSelf: 'center', fontSize: 20, color: 'gold' }}>{formatNumberWithThousandsSeparator(carsData.price)} $</Text>
+                    <Image source={car.lien} style={styles.containerImage} />
+                    <Text style={{ alignSelf: 'center', fontSize: 20, color: 'gold' }}>{formatNumberWithThousandsSeparator(car.price)} $</Text>
                 </View>
 
                 <View style={styles.containerOptions}>
                     <ScrollView showsHorizontalScrollIndicator={true} horizontal={true} contentContainerStyle={{ flexDirection: 'row', alignItems: "center", gap: 30 }}>
                         <View style={styles.Options}>
                             <MaterialCommunityIcons name="horse-variant" size={28} color="black" />
-                            <Text >Horse power: {carsData.hp} </Text>
+                            <Text >Horse power: {car.hp} </Text>
                         </View>
 
                         <View style={styles.Options}>
                             <MaterialIcons name="speed" size={28} color="black" />
-                            <Text>Top speed: {carsData.topSpeed}</Text>
+                            <Text>Top speed: {car.topSpeed}</Text>
                         </View>
                         <View style={styles.Options}>
                             <Feather name="user" size={30} color="black" />
-                            <Text>{carsData.seats}</Text>
+                            <Text>{car.seats}</Text>
                         </View>
                         <View style={styles.Options}>
                             <Feather name="user" size={28} color="black" />
-                            <Text>Type de voiture: {carsData.typeCar}</Text>
+                            <Text>Type de voiture: {car.typeCar}</Text>
                         </View>
                     </ScrollView>
 
@@ -132,11 +121,11 @@ export default function Details() {
                 <Collapsible style={{ backgroundColor: 'rgba(95, 91, 91, 0)' }} title="Déscription">
 
                     <ThemedText style={{ backgroundColor: 'rgba(95, 91, 91, 0)', color: 'black' }}>
-                        {carsData.description}
+                        {car.description}
                     </ThemedText>
                 </Collapsible >
                 <View style={{ marginTop: 40 }}>
-                    <Buttons text={'Voir voiture sur la map'} fonction={pushMap} />
+                    <Buttons text={'Voir voiture sur la map'} fonction={func} userouter={true} carData={car} />
 
                 </View>
 

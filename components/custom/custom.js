@@ -1,15 +1,23 @@
-import { StyleSheet,Text, View, Pressable,Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
+import { carsLocation } from "@/constants/carsPositions";
 
-export const Buttons = ({text, fonction}) => {
+export const Buttons = ({ text, fonction, userouter = false, carData = null }) => {
+    const router = useRouter();
+
+
     return (
 
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Pressable
                 style={{ marginTop: 10 }}
-                onPress={() => { fonction() }}
+                onPress={() => {
+                    return userouter && carData
+                        ? router.push({ pathname: '/carsMap', params: { item: JSON.stringify(carData) } })
+                        : fonction();
+                }}
             >
                 <LinearGradient
                     style={styles.boutton}
@@ -21,20 +29,34 @@ export const Buttons = ({text, fonction}) => {
                 </LinearGradient>
             </Pressable>
 
+
         </View>
     )
 }
-export const AffciherImage = ({ item, styles, mix ,loading, setLoading}) => {
-        const router = useRouter(); 
+const getLocationUserCar = (id) => {
+    return carsLocation.find((data) => data.id === id);
 
+
+};
+export const AffciherImage = ({ item, styles, mix, loading, setLoading }) => {
+    const [car, setCar] = useState(item);
+    const router = useRouter();
+    // console.log('item dans AffciherImage', item);
+    useEffect(() => {
+        let itemWithLocation = getLocationUserCar(item.id);
+        if (itemWithLocation) {
+            setCar(prev => ({ ...prev, ...itemWithLocation }));
+        }
+    }, [item]);
+    // console.log('item dans fonction AffciherImage ', itemWithLocation);
     return (
-        <Pressable style={mix ? styles.imgCar2 : styles.imgCar}onPress={() => { router.push({ pathname: '/details', params: { item: JSON.stringify(item) } }) }}>
+        <Pressable style={mix ? styles.imgCar2 : styles.imgCar} onPress={() => { router.push({ pathname: '/details', params: { item: JSON.stringify(car) } }) }}>
             {loading ?
-                (<Image source={require('@/assets/images/loading-gif.webp')}  style={styles.iconCarsImage}        
+                (<Image source={require('@/assets/images/loading-gif.webp')} style={styles.iconCarsImage}
 
 
-                />) 
-                : <Image source={item.lien} style={mix ? styles.iconCarsImage2 : styles.iconCarsImage} onLoadEnd={()=>setLoading(false)}
+                />)
+                : <Image source={item.lien} style={mix ? styles.iconCarsImage2 : styles.iconCarsImage} onLoadEnd={() => setLoading(false)}
 
                 />}
         </Pressable>
@@ -59,6 +81,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: 'white',
     }
-  
+
 });
 

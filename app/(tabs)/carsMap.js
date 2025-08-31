@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
-import { useRouter, Link, } from 'expo-router';
+import React, { useState, useEffect, useContext, useRef, useCallback, } from 'react';
+import { useRouter, Link, useLocalSearchParams } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { carsLocation } from "@/constants/carsPositions";
 
@@ -16,10 +16,14 @@ import { useFocusEffect } from '@react-navigation/native';
 const { height, width } = Dimensions.get('window');
 
 export default function CarsMap() {
+    const { item } = useLocalSearchParams();
+    //console.log('item carsMap', item);
+    const carLocation = item ? JSON.parse(item) : null;
 
     const { user } = useContext(UserContex);
-    const [region, setRegion] = useState({ latitude: 0, longitude: 0, latitudeDelta: 0.01, longitudeDelta: 0.01 })
-    const [showInfoUser, setShowInfoUser] = useState(false);
+    const [userHomeLocation, setUserHomeLocation] = useState({ latitude: 0, longitude: 0, latitudeDelta: 0.01, longitudeDelta: 0.01 })
+    const [showInfoUser, setShowInfoUser] = useState(true);
+
     const [dealerUser, setDealertUser] = useState({
         id: null,
         ownerName: "",
@@ -40,27 +44,37 @@ export default function CarsMap() {
     const router = useRouter();
     const mapRef = useRef(null);
     const houseRef = useRef(null);
+    const carRef = useRef(null);
     const markerRefs = useRef([null, null]); // refs pour markers
 
     const fetchLocation = async () => {
-        const userLocation = await getLocation();
-        if (userLocation) {
+       // console.log('userHomeLocation', userHomeLocation);
 
-            const positionInitiale = {
-                latitude: userLocation.latitude,
-                longitude: userLocation.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
+        if (userHomeLocation.latitude === 0 && userHomeLocation.longitude === 0) {
+            const userLocation = await getLocation();
+            if (userLocation) {
+
+                const positionInitiale = {
+                    latitude: userLocation.latitude,
+                    longitude: userLocation.longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                }
+
+
+                setUserHomeLocation(positionInitiale);
+
+                houseRef.current = positionInitiale;
+               // console.log(' dans if houseRef.current = userHomeLocation')
+
+                if (mapRef.current) {
+                    mapRef.current.animateToRegion(positionInitiale, 1000)// anime vers la  position
+                }
             }
+        } else {
+            //console.log(' dans else houseRef.current = userHomeLocation')
+            houseRef.current = userHomeLocation;
 
-
-            setRegion(positionInitiale)//nouvelle valeur, déclenche re-render
-
-            houseRef.current = positionInitiale;
-
-            if (mapRef.current) {
-                mapRef.current.animateToRegion(userLocation, 1000)// anime vers la  position
-            }
         }
 
     }
@@ -80,35 +94,82 @@ export default function CarsMap() {
         }
     };
 
-    const getDefaultLocationUserCar = (id = 5) => {
-        const car = cars.find((data) => data.id === id);
-        if (car) {
-            return car;
+
+
+
+    const fetcth = () => {
+
+        //console.log(' avant dans la fonction fetch if carLocation\n:', carLocation);
+
+        if (carLocation && carLocation.location) {
+            //console.log('if carLocation\n:', carLocation);
+            // Cas 1 : voiture reçue depuis params
+            const positionInitiale = {
+                latitude: carLocation.location.latitude,
+                longitude: carLocation.location.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+            };
+
+            carRef.current = positionInitiale; // référence pour pin / recentrage
+            //console.log('carRef.current = positionInitiale;')
+            if (dealerUser.id !== carLocation.id) {
+                setDealertUser({ ...dealerUser, ...carLocation });
+                setShowInfoUser(false);
+            }
+
+
+            if (mapRef.current) {
+                mapRef.current.animateToRegion(positionInitiale, 1000);
+            }
+
+        } else {
+            //console.log('fetchLocation 1');
+            //console.log('carRef.current', carRef.current);
+            fetchLocation();
         }
-        return undefined;
-    };
-
-
+      
+    }
 
 
     useEffect(() => {
+        //console.log(' dans  useEffect', carLocation);
 
-        if (region.latitude === 0 && region.longitude === 0) {
-            fetchLocation();
+        fetcth();
+    }, [carLocation]);
 
-        }
-    }, [])
+
+
 
     useFocusEffect(
 
         useCallback(() => {
-            setShowInfoUser(false)
-            const car = getDefaultLocationUserCar();
-            setDealertUser({ ...dealerUser, ...car });
+            console.log('useFocusEffect ');
 
-            if (mapRef.current) {
-                mapRef.current.animateToRegion(houseRef.current, 1000)// anime vers la  position
+
+            if (mapRef.current && carRef.current == null) {
+               // console.log('anime vers la  position de la maison')
+                mapRef.current.animateToRegion(houseRef.current, 1000)
+                // anime vers la  position de la maison
+            } else if (mapRef.current && carRef.current != null) {
+                console.log(' anime vers la  position de la voiture')
+
+                mapRef.current.animateToRegion(carRef.current, 1000)// anime vers la  position de la voiture
             }
+            return () => {
+                console.log('Cleanup on blur');
+                setDealertUser({
+                    id: null,
+                    ownerName: "",
+                    name: "",
+                    image: null,
+                    city: "",
+                    phone: "",
+                    email: "",
+                    location: { latitude: 0, longitude: 0 }
+                });
+                carRef.current = null;
+            };
         }, []),
     )
 
@@ -132,21 +193,26 @@ export default function CarsMap() {
                 <MapView
                     style={styles.containerMap}
                     ref={mapRef}
-                    initialRegion={region}
-                    onRegionChangeComplete={(region) => { setRegion(region) }}
+                    initialRegion={{
+                        latitude: 0,
+                        longitude: 0,
+                        latitudeDelta: 0.01,
+                        longitudeDelta: 0.01
+                    }}
+                //  onRegionChangeComplete={(region) => { setRegion(region) }}
                 >
 
-                    {houseRef.current && (
+                    {houseRef.current && ( // modifier pour plus tard pour afficher la voiture du
                         <Marker
                             coordinate={{
                                 latitude: houseRef.current.latitude,
                                 longitude: houseRef.current.longitude
                             }}
-                            title="Votre position"
-                            description="House"
+                            title={"Votre position"}
+                            description={"House"}
                         >
                             <Pressable style={{ alignItems: 'center' }}
-                                onPress={() => { { setShowInfoUser(!showInfoUser) } }}>
+                                onPress={() => { { setShowInfoUser(true) } }}>
                                 <Image
                                     source={require('@/assets/images/home.png')}
                                     style={{ width: 20, height: 20 }}
@@ -155,21 +221,50 @@ export default function CarsMap() {
                             </Pressable>
                         </Marker>
                     )}
-                    {cars && cars.map((data) => (
+                    {carLocation ? ( // si une voiture est passée en paramètre, afficher uniquement cette voiture
 
                         <Marker
-                            key={data.id}
-                            title={data.ownerName}
-                            description={`Voiture située à ${data.city}`}
-                            coordinate={data.location}
+                            key={carLocation.id}
+                            title={carLocation.ownerName}
+                            description={`Voiture située à ${carLocation.city}`}
+                            coordinate={carLocation.location}
                             ref={(ref) => {
-                                if (ref) markerRefs.current[data.id] = ref;
+                                if (ref) markerRefs.current[carLocation.id] = ref;
                             }}
                             pinColor="red"
-                            onPress={() => {setDealertUser({ ...dealerUser, ...data });setShowInfoUser(false)}}
-                        />
+                            onPress={() => {
+                                if (dealerUser.id !== carLocation.id) {
+                                    setDealertUser({ ...dealerUser, ...carLocation });
+                                    setShowInfoUser(false);
 
-                    ))}
+                                }
+                            }}
+                        />
+                    ) :
+                     (// sinon afficher toutes les voitures
+                        <>
+                            {cars && cars.map((data) => (
+                                <Marker
+                                    key={data.id}
+                                    title={data.ownerName}
+                                    description={`Voiture située à ${data.city}`}
+                                    coordinate={data.location}
+                                    ref={(ref) => {
+                                        if (ref) markerRefs.current[data.id] = ref;
+                                    }}
+                                    pinColor="red"
+                                    onPress={() => {
+                                        if (dealerUser.id !== data.id) {
+                                            setDealertUser({ ...dealerUser, ...data });
+                                            setShowInfoUser(false);
+                                        }
+                                    }}
+                                />
+                            ))}
+                        </>
+                    )}
+
+
 
                     <View style={styles.containerMapOptions}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.25, paddingTop: 12, height: height * 0.11, width: width * 0.90, borderRadius: 30 }}>
@@ -207,8 +302,8 @@ export default function CarsMap() {
 
 
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', position: 'relative' }}>
-                                <AntDesign name="phone" size={30} color="red" style={{ position: 'absolute', left: -width *0.15 }} />
-                                <AntDesign name="message1" size={30} color="red" style={{ position: 'absolute', left: width*0.10 }} />
+                                <AntDesign name="phone" size={30} color="red" style={{ position: 'absolute', left: -width * 0.15 }} />
+                                <AntDesign name="message1" size={30} color="red" style={{ position: 'absolute', left: width * 0.10 }} />
                             </View>
 
 
@@ -223,32 +318,22 @@ export default function CarsMap() {
                                 }}>
 
                                     <Image
-                                        source={showInfoUser
-                                            ? require('@/assets/images/porscheGt3Rs_car.png')
-                                            : dealerUser.image
-                                        }
-                                        style={{
-                                            width: width * 0.30,
-                                            height: width * 0.30,
-                                        }}
+                                        source={dealerUser && !showInfoUser ? dealerUser.image : require('@/assets/images/porscheGt3Rs_car.png')}
+                                        style={{ width: width * 0.30, height: width * 0.30, alignSelf: 'center' }}
                                         resizeMode="contain"
                                     />
                                 </View>
                                 <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 8, color: 'black' }}>
-                                    {showInfoUser ? ` Vous: ${user.name}` : `Nom: ${dealerUser.ownerName}`}
+                                    {dealerUser && !showInfoUser ? dealerUser.ownerName : user.name}
                                 </Text>
                                 <Text style={{ fontSize: 16, color: 'black' }}>
-                                    Email:  {showInfoUser ? user.email : `${dealerUser.email}`}
+                                    Email: {dealerUser && !showInfoUser ? dealerUser.email : user.email}
                                 </Text>
                                 <Text style={{ fontSize: 16, color: 'black' }}>
-                                    Ville:  {showInfoUser ? "Laval" : `${dealerUser.city}`}
+                                    Ville: {dealerUser && !showInfoUser ? dealerUser.city : "Laval"}
                                 </Text>
                                 <Text style={{ fontSize: 16, color: 'black' }}>
-                                    Téléphone:  {showInfoUser ? "514-256-4567" : `${dealerUser.phone}`}
-                                </Text>
-                                <Text style={{ fontSize: 16, color: 'black', marginTop: 10 }}>
-                                    Owner off the : {showInfoUser ? "Porshe Gt3 Rs" : `${dealerUser.name}`}
-
+                                    Téléphone: {dealerUser && !showInfoUser ? dealerUser.phone : "514-256-4567"}
                                 </Text>
 
                             </ScrollView>
