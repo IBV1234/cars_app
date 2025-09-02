@@ -7,7 +7,7 @@ export const carsLogo = [
     { id: 6, name: "Honda", lien: "honda_logo.png" }
 ];
 
- export const images = {
+export const images = {
     "porsche_logo.png": require('@/assets/images/porsche_logo.png'),
     "vw_logo.png": require('@/assets/images/vw_logo.png'),
     "bmw_logo.png": require('@/assets/images/bmw_logo.png'),
@@ -22,5 +22,14 @@ export const carsLogo = [
     "vwGtiMk7_car.png": require('@/assets/images/vwGtiMk7_car.png'),
     "audiR8_car.png": require('@/assets/images/audiR8_car.png'),
     "porscheGt3Rs_car.png": require('@/assets/images/porscheGt3Rs_car.png'),
-    "defaultUser.png":require('@/assets/images/defaultUser.png'),
+    "defaultUser.png": require('@/assets/images/defaultUser.png'),
 }
+
+export const nameLogo = [
+    'BMW M4 Competition',
+    'Mercedes AMG GT',
+    'Honda Civic Type R',
+    'VW GTI Mk7',
+    'Audi R8',
+    'Porsche GT3 RS'
+]

@@ -92,6 +92,32 @@ export const insertUserInBd = (personne) => {
     }
 }
 
+export const insertCarsData = (car) => {
+    try {
+        db.isInTransactionSync(()=>{
+            db.runSync(
+                    "INSERT INTO Cars (name, brand, year, lien, hp, seats, price, topSpeed, description, typeCar) VALUES (?,?,?,?,?,?,?,?,?,?)",
+
+                [
+                        car.name ??'',
+                        car.brand ?? '',
+                        car.year ?? '',
+                        car.lien ??'',
+                        car.hp ?? '',
+                        car.seats ?? '',
+                        car.price ?? '',
+                        car.topSpeed ??'',
+                        car.description ?? '',
+                        car.typeCar ?? '',
+                ]
+            )
+        })
+        return true;
+    } catch (err) {
+        console.error("ERREUR dans l'insertion d'une voiture",err);
+        return false
+    }
+}
 
 export const updateUserProfile = (user) => {
     try {
