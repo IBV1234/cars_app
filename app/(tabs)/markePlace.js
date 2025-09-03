@@ -4,12 +4,12 @@ import { useRouter, Link } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { StyleSheet, Text, View, Dimensions, Pressable, TextInput, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { insertCarsData } from '../../fonctions/fonctions';
+import { insertCarsData, dropDownComponent } from '../../fonctions/fonctions';
 import { Buttons } from '@/components/custom/custom';
-import{nameLogo} from '../../constants/carsLogo';
+import { nameLogo } from '../../constants/carsLogo';
 import * as  SQLite from 'expo-sqlite';
 import { db } from "./index";
-import SelectDropdown from 'react-native-select-dropdown';
+import { Dropdown } from 'react-native-element-dropdown';
 const { height, width } = Dimensions.get('window');
 
 export default function MarkePlace() {
@@ -19,8 +19,8 @@ export default function MarkePlace() {
     const router = useRouter();
 
     const [car, setCar] = useState({ name: '', brand: '', lien: '', hp: '', seats: '', price: '', topSpeed: '', description: '', typeCar: '' })
-
-   console.log(nameLogo)
+    const [carSelectDropDown, setSelectDropDown] = useState('');
+    console.log(nameLogo)
     return (
         <View style={styles.containerConnexion}>
 
@@ -44,7 +44,13 @@ export default function MarkePlace() {
                 <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={true} >
                     <View style={styles.containerInput}>
 
+                        <View style={{ width: 300, height: 50, marginTop: 20 }}>
+                            {
+                                dropDownComponent(nameLogo, car, setCar, styles)
 
+                            }
+
+                        </View>
                         <View style={{ width: 300, height: 50 }}>
                             <TextInput
                                 style={styles.input}
@@ -123,24 +129,13 @@ export default function MarkePlace() {
                             />
                         </View>
 
-                        <View style={{ width: 300, height: 50, marginTop: 20 }}>
-                            <SelectDropdown
-                                data={nameLogo}
-                                onSelect={(selectedItem) => {
-                                    console.log("selectedItem",selectedItem)
-                                    setCar({ ...car, typeCar: selectedItem });
-                                }}
-                                defaultButtonText="Sélectionnez le type de voiture"
-                                buttonStyle={{ backgroundColor: '#ccc', borderRadius: 5, width: '100%' }}
-                                buttonTextStyle={{ color: 'black' }}
-                            />
-                        </View>
+
                     </View>
-            
+
                 </ScrollView>
 
-            </LinearGradient>   
-                        
+            </LinearGradient>
+
 
 
             <Buttons text={'Add'} fonction={insertCarsData(car)} />
@@ -229,7 +224,32 @@ const styles = StyleSheet.create({
         width: width * 1,
         height: height * 0.1,
 
-    }
+
+    },
+    //dropdown style
+    dropdown: {
+        margin: 16,
+        height: 50,
+        borderBottomColor: 'gray',
+        borderBottomWidth: 0.5,
+    },
+    icon: {
+        marginRight: 5,
+    },
+    placeholderStyle: {
+        fontSize: 16,
+    },
+    selectedTextStyle: {
+        fontSize: 16,
+    },
+    iconStyle: {
+        width: 20,
+        height: 20,
+    },
+    inputSearchStyle: {
+        height: 40,
+        fontSize: 16,
+    },
 });
 
 

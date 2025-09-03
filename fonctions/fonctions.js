@@ -4,6 +4,7 @@ import moment from 'moment-timezone';
 import * as Keychain from 'react-native-keychain';
 import { images } from "@/constants/carsLogo";
 import * as Location from 'expo-location';
+import { Dropdown } from 'react-native-element-dropdown';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -94,27 +95,27 @@ export const insertUserInBd = (personne) => {
 
 export const insertCarsData = (car) => {
     try {
-        db.isInTransactionSync(()=>{
+        db.isInTransactionSync(() => {
             db.runSync(
-                    "INSERT INTO Cars (name, brand, year, lien, hp, seats, price, topSpeed, description, typeCar) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                "INSERT INTO Cars (name, brand, year, lien, hp, seats, price, topSpeed, description, typeCar) VALUES (?,?,?,?,?,?,?,?,?,?)",
 
                 [
-                        car.name ??'',
-                        car.brand ?? '',
-                        car.year ?? '',
-                        car.lien ??'',
-                        car.hp ?? '',
-                        car.seats ?? '',
-                        car.price ?? '',
-                        car.topSpeed ??'',
-                        car.description ?? '',
-                        car.typeCar ?? '',
+                    car.name ?? '',
+                    car.brand ?? '',
+                    car.year ?? '',
+                    car.lien ?? '',
+                    car.hp ?? '',
+                    car.seats ?? '',
+                    car.price ?? '',
+                    car.topSpeed ?? '',
+                    car.description ?? '',
+                    car.typeCar ?? '',
                 ]
             )
         })
         return true;
     } catch (err) {
-        console.error("ERREUR dans l'insertion d'une voiture",err);
+        console.error("ERREUR dans l'insertion d'une voiture", err);
         return false
     }
 }
@@ -334,6 +335,30 @@ export const formatNumberWithThousandsSeparator = (number, locale = 'en-US') => 
     return formatter.format(number);
 }
 
+export const dropDownComponent = (data, car,setCar, styles) => {
+    return (
+        <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={ styles.placeholderStyle}
+            selectedTextStyle={ styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={data}
+            search
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Select item"
+            searchPlaceholder="Search..."
+            value={car}
+            onChange={item => {
+                setCar(item.value);
+            }}
+
+        />
+    )
+
+}
 
 
 //
