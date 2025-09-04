@@ -22,7 +22,7 @@ export default function MarkePlace() {
     const { user } = useContext(UserContex); // Utilisation du contexte
     const router = useRouter();
 
-    const [car, setCar] = useState({ name: 'BMW M4', brand: '', lien: '', hp: '800', seats: '2', price: '90000', topSpeed: '300', description: 'inline 6 beturbo', typeCar: 'sedan', year: '2025' })
+    const [car, setCar] = useState({ name: '', brand: '', lien: '', hp: '', seats: '', price: '', topSpeed: '', description: '', typeCar: '', year: '' })
     const [carSelectDropDown, setSelectDropDown] = useState('');
 
 

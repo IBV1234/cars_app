@@ -24,7 +24,6 @@ export default function Accueil() {
     const [carsLogoData, setCarsLogoData] = useState([]);
     const [carsData, setCarsData] = useState([]);
     const { user, setUser } = useContext(UserContex);
-    const [isGetCarsCategory,setGetCarsCategory] = useState(false);
     const { likeIds, setLikeIds } = useContext(LikeContext);
     // const [likeIds, setLikeIds] = useState(new Set);// set est un  tableau like avec les ids  et  qui stocke des éléments uniques.
     const [loading, setLoading] = useState(true);
@@ -42,7 +41,6 @@ export default function Accueil() {
                 }
                 if (cars.length > 0) {
                     setCarsData(addLink(cars));
-                    setGetCarsCategory(false);
                 } else {
                     console.log("Aucune voiture trouvée dans la base de données.");
                 }
@@ -57,7 +55,6 @@ export default function Accueil() {
             const cars = db.getAllSync('SELECT * FROM Cars WHERE brand = ?', [brand]);
             if (cars.length > 0) {
                 setCarsData(addLink(cars));
-                setGetCarsCategory(true);
 
             } else {
                 console.log("Aucune voiture trouvée dans la base de données.");
@@ -82,7 +79,6 @@ export default function Accueil() {
     }, [])
 
     useEffect(() => {
-        console.log(isGetCarsCategory)
         if (carsData.length < 2 ) {
             setNumColumns(1); // nombre de colonnes à 1 si moins de 2 voitures pour la recherche
         } else {
