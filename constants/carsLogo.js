@@ -25,11 +25,29 @@ export const images = {
     "defaultUser.png": require('@/assets/images/defaultUser.png'),
 }
 
-export const nameLogo = [
-    'BMW M4 Competition',
-    'Mercedes AMG GT',
-    'Honda Civic Type R',
-    'VW GTI Mk7',
-    'Audi R8',
-    'Porsche GT3 RS'
-]
+
+
+export  const dataLogo = [
+    { label: 'BMW Competition', value: 'BMW  Competition' },
+    { label: 'Mercedes ', value: 'Mercedes ' },
+    { label: 'Honda Civic ', value: 'Honda Civic ' },
+    { label: 'Audi R8', value: 'Audi R8' },
+    { label: 'Porsche', value: 'Porsche ' },
+    { label: 'VW ', value: 'VW ' },
+     {label: 'Corvette ', value: 'Corvette' },
+  ];
+
+  export const dataCarTypes = [
+  { label: 'Sedan', value: 'sedan' },
+  { label: 'SUV', value: 'suv' },
+  { label: 'Hatchback', value: 'hatchback' },
+  { label: 'Coupé', value: 'coupe' },
+  { label: 'Cabriolet / Convertible', value: 'convertible' },
+  { label: 'Pickup', value: 'pickup' },
+  { label: 'Minivan', value: 'minivan' },
+  { label: 'Break / Wagon', value: 'wagon' },
+  { label: 'Sport Car', value: 'sports' },
+  { label: 'Crossover', value: 'crossover' },
+  { label: 'Voiture électrique', value: 'electric' },
+  { label: 'Voiture de luxe', value: 'luxury' }
+];

@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect,createContext } from "react";
-import { Link ,router} from "expo-router";
+import React, { useContext, useState, useEffect, createContext, useCallback } from "react";
+import { Link, router, useFocusEffect } from "expo-router";
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View, Dimensions, Pressable, Image, FlatList, TextInput } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -7,7 +7,7 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { carsLogo } from "@/constants/carsLogo";
 import { UserContex } from './connection';
-import { formatNumberWithThousandsSeparator, toogleLike, addLink} from '@/fonctions/fonctions';
+import { formatNumberWithThousandsSeparator, toogleLike, addLink } from '@/fonctions/fonctions';
 import { AffciherImage } from '@/components/custom/custom';
 
 import * as Localization from "expo-localization";
@@ -24,12 +24,13 @@ export default function Accueil() {
     const [carsLogoData, setCarsLogoData] = useState([]);
     const [carsData, setCarsData] = useState([]);
     const { user, setUser } = useContext(UserContex);
+    const [isGetCarsCategory,setGetCarsCategory] = useState(false);
     const { likeIds, setLikeIds } = useContext(LikeContext);
     // const [likeIds, setLikeIds] = useState(new Set);// set est un  tableau like avec les ids  et  qui stocke des éléments uniques.
     const [loading, setLoading] = useState(true);
     const [numColumns, setNumColumns] = useState(2);
 
-   
+
     const getCarsData = (cardata) => {
         try {
             db.withTransactionSync(() => {
@@ -41,6 +42,7 @@ export default function Accueil() {
                 }
                 if (cars.length > 0) {
                     setCarsData(addLink(cars));
+                    setGetCarsCategory(false);
                 } else {
                     console.log("Aucune voiture trouvée dans la base de données.");
                 }
@@ -55,20 +57,33 @@ export default function Accueil() {
             const cars = db.getAllSync('SELECT * FROM Cars WHERE brand = ?', [brand]);
             if (cars.length > 0) {
                 setCarsData(addLink(cars));
+                setGetCarsCategory(true);
 
             } else {
                 console.log("Aucune voiture trouvée dans la base de données.");
             }
         })
     }
+  const deleteCarsByYear = (year) => {
+    db.withTransactionSync(() => {
+        const result = db.runSync('DELETE FROM Cars WHERE year = ?', [year]);
+        console.log(`${result.changes} voiture(s) supprimée(s) avec l'année ${year}.`);
+    });
+};
+
 
 
     useEffect(() => {
+                console.log(user)
+                console.log(carsData)
+            // deleteCarsByYear(2025);
+
         setCarsLogoData(addLink(carsLogo));
     }, [])
 
     useEffect(() => {
-        if (carsData.length < 2) {
+        console.log(isGetCarsCategory)
+        if (carsData.length < 2 ) {
             setNumColumns(1); // nombre de colonnes à 1 si moins de 2 voitures pour la recherche
         } else {
             setNumColumns(2);
@@ -94,21 +109,21 @@ export default function Accueil() {
             <View style={styles.containerProfil}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Link href={'/profile'} >
-                        
-                           {user.picture === '' ? (
+
+                        {user.picture === '' ? (
                             <FontAwesome name="user" size={38} color="#8B0000" />
-                    )
-                        :
-                        (
-
-                            <Image source={{ uri: user.picture }} style={{
-                                width: width * 0.15,
-                                height: width * 0.15,
-                                borderRadius: (width * 0.15) / 2
-                            }} resizeMode="cover" />
-
                         )
-                    }
+                            :
+                            (
+
+                                <Image source={{ uri: user.picture }} style={{
+                                    width: width * 0.15,
+                                    height: width * 0.15,
+                                    borderRadius: (width * 0.15) / 2
+                                }} resizeMode="cover" />
+
+                            )
+                        }
                     </Link>
                     <Text style={styles.text}> Bonjour {user.name}</Text>
                 </View>
@@ -127,7 +142,7 @@ export default function Accueil() {
                     style={{ color: 'white' }}
                     placeholder={"Recherche de voiture"}
                     placeholderTextColor="white"
-                    autoComplete= {true}
+                    autoComplete={true}
                     value={recherche.car}
                     maxLength={20}
                     onChangeText={(name) => setRecherche({ ...recherche, car: name })}
@@ -160,7 +175,7 @@ export default function Accueil() {
             </View>
 
 
-            <View style={{ flex: 1 }}
+            <View style={{ flex: 1,marginBottom:80 }}
             >
                 <FlatList
                     data={carsData}
@@ -171,7 +186,7 @@ export default function Accueil() {
 
                         // can put code here
                         let mix = carsData.length < 2;
-                        
+
 
                         return (
                             <View style={[styles.ContainerCarsImg, { flex: 1, margin: 5 }]} >
@@ -309,7 +324,7 @@ const styles = StyleSheet.create({
     imgCar: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: width * 0.30
+        height: width * 0.30,
     },
     imgCar2: {
         justifyContent: 'center',

@@ -111,6 +111,7 @@ export default function Profile() {
                     {
                         const result = await editProfilPicture(user.email,setUser);
                         setReload(result)
+                        
                     }
                 }}>
 

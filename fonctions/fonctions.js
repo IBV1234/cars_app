@@ -5,8 +5,11 @@ import * as Keychain from 'react-native-keychain';
 import { images } from "@/constants/carsLogo";
 import * as Location from 'expo-location';
 import { Dropdown } from 'react-native-element-dropdown';
+import { Alert } from 'react-native';
+
 
 import * as ImagePicker from 'expo-image-picker';
+import { useState } from "react";
 
 export const validerEmail = (email) => {
     const trimmed = email.trim();
@@ -49,24 +52,24 @@ export const BoolValideUserInBd = (email, mdp) => {
 };
 
 export const addLink = (Data) => {
-    const newData = Data.map((_data) => {
-        if (typeof _data.lien === 'number') {
+    return Data.map((_data) => {
+        console.log(_data.lien)
+        if (_data.lien && _data.lien.startsWith("file")) {
+            // Cas photo locale depuis ImagePicker
             return {
                 ..._data,
-                lien: images[_data.imageName],
-                imageName: _data.imageName,
-            }
+                lien: { uri: _data.lien }, // expo Image friendly
+            };
         } else {
+            // Cas image fixe déjà dans ton projet
             return {
                 ..._data,
-                lien: images[_data.lien],
-                imageName: _data.lien,
-            }
+                lien: images[_data.lien] || null,
+            };
         }
-
     });
-    return newData;
-}
+};
+
 
 export const insertUserInBd = (personne) => {
     try {
@@ -93,32 +96,61 @@ export const insertUserInBd = (personne) => {
     }
 }
 
+export const handleEditCar = async (car,setCar) => {
+        Alert.alert(
+            "Attention",
+            "Vous devez retirer le fond écran de l'image avant de l'utiliser",
+            [
+                {
+                    text: "Annuler",
+                    style: "cancel"
+                },
+                {
+                    text: "OK",
+                    onPress: async () => {
+                        try {
+                            const result = await editCarPic(car, setCar);
+                            console.log(result);
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    }
+                }
+            ],
+            { cancelable: true }
+        );
+    };
+
+
 export const insertCarsData = (car) => {
     try {
-        db.isInTransactionSync(() => {
+        db.withTransactionAsync(() => {
+            console.log("insertCarsData", car)
             db.runSync(
                 "INSERT INTO Cars (name, brand, year, lien, hp, seats, price, topSpeed, description, typeCar) VALUES (?,?,?,?,?,?,?,?,?,?)",
-
                 [
                     car.name ?? '',
                     car.brand ?? '',
-                    car.year ?? '',
-                    car.lien ?? '',
-                    car.hp ?? '',
-                    car.seats ?? '',
-                    car.price ?? '',
-                    car.topSpeed ?? '',
+                    parseInt(car.year) || 2025,
+                    String(car.lien ?? ''),
+                    parseInt(car.hp) || 0,
+                    parseInt(car.seats) || 0,
+                    parseInt(car.price) || 0,
+                    parseInt(car.topSpeed) || 0,
                     car.description ?? '',
                     car.typeCar ?? '',
                 ]
-            )
-        })
+            );
+        });
+
         return true;
     } catch (err) {
         console.error("ERREUR dans l'insertion d'une voiture", err);
         return false
     }
 }
+
+
 
 export const updateUserProfile = (user) => {
     try {
@@ -142,6 +174,8 @@ export const updateUserProfile = (user) => {
         console.error("Erreur dans la modification du user dans la bd", error);
         return false;
     }
+
+
 }
 export const GetUserInBd = (email, mdp) => {
     try {
@@ -322,6 +356,37 @@ export const editProfilPicture = async (userEmail, setUser) => {//fonction async
 }
 
 
+export const editCarPic = async (car, setCar) => {
+    try {
+        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();//demande la permission d’accéder à l’appareil photo
+        if (!permissionResult.granted) { //granted: objet contenant true or false
+            alert("Permission refué");
+            return false
+        }
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaType: ImagePicker.MediaTypeOptions.Images,  //on autorise uniquement les photos.
+            quality: 0.8,//on demande une image compressée à 80% de qualité.
+        });
+
+        if (result.canceled) return false // L'utilisateur a annulé
+
+        const asset = result.assets && result.assets[0];// Si result.asset existe, on prend l'objet qui contient le uri et la grandeur de la photo
+
+        if (asset && asset.uri) {
+            setCar({ ...car, lien: asset.uri });
+            return asset.uri;
+
+        }
+
+        return false;
+
+    } catch (error) {
+        console.error('Erreur dans lors de la modfication de la photo de voiture', error);
+        return false;
+    }
+
+}
+
 
 export const getDate = () => {
     const date = moment().tz('America/Toronto').format('MMMM-DD-YYYY');
@@ -335,24 +400,31 @@ export const formatNumberWithThousandsSeparator = (number, locale = 'en-US') => 
     return formatter.format(number);
 }
 
-export const dropDownComponent = (data, car,setCar, styles) => {
+export const dropDownComponent = (data, car, setCar, styles, type = 'logo') => {
+    let dataType = type === 'logo' ? car.brand : car.typeCar;
     return (
         <Dropdown
             style={styles.dropdown}
-            placeholderStyle={ styles.placeholderStyle}
-            selectedTextStyle={ styles.selectedTextStyle}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
             data={data}
             search
-            maxHeight={300}
+            maxHeight={250}
             labelField="label"
             valueField="value"
-            placeholder="Select item"
+            placeholder={`Select ${type === 'logo' ? 'logo' : 'type voiture'}`}
             searchPlaceholder="Search..."
-            value={car}
+            value={dataType}
             onChange={item => {
-                setCar(item.value);
+                if (type === 'logo') {
+                    setCar({ ...car, brand: item.value });
+                } else {
+                    setCar({ ...car, typeCar: item.value });
+
+                }
+
             }}
 
         />

@@ -7,7 +7,7 @@ import { carsLocation } from "@/constants/carsPositions";
 export const Buttons = ({ text, fonction, userouter = false, carData = null }) => {
     const router = useRouter();
 
-
+    
     return (
 
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
