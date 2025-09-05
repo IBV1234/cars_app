@@ -53,18 +53,17 @@ export const BoolValideUserInBd = (email, mdp) => {
 
 export const addLink = (Data) => {
     return Data.map((_data) => {
-        console.log(_data.lien)
         if (_data.lien && _data.lien.startsWith("file")) {
-            // Cas photo locale depuis ImagePicker
+            //  photo locale depuis ImagePicker
             return {
                 ..._data,
-                lien: { uri: _data.lien }, // expo Image friendly
+                lien: { uri: _data.lien }, 
             };
         } else {
-            // Cas image fixe déjà dans ton projet
+            // Cas image fixe déjà dans projet
             return {
                 ..._data,
-                lien: images[_data.lien] || null,
+                lien: images[_data.lien] || '',
             };
         }
     });
@@ -316,6 +315,8 @@ export const getLocation = async () => {
         return false;
     }
 };
+
+
 
 export const editProfilPicture = async (userEmail, setUser) => {//fonction asynchrone car launchImageLibrary retourne une promesse
 

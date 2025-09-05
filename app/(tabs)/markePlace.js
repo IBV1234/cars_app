@@ -9,11 +9,9 @@ import { Buttons } from '@/components/custom/custom';
 import { dataLogo, dataCarTypes } from '../../constants/carsLogo';
 import * as  SQLite from 'expo-sqlite';
 import { db } from "./index";
-import { Alert } from 'react-native';
 
 import { UserContex, } from './connection';
 
-import { Dropdown } from 'react-native-element-dropdown';
 const { height, width } = Dimensions.get('window');
 
 export default function MarkePlace() {
@@ -22,10 +20,8 @@ export default function MarkePlace() {
     const { user } = useContext(UserContex); // Utilisation du contexte
     const router = useRouter();
 
-    const [car, setCar] = useState({ name: '', brand: '', lien: '', hp: '', seats: '', price: '', topSpeed: '', description: '', typeCar: '', year: '' })
+    const [car, setCar] = useState({ name: 'BWM M4', brand: '', lien: '', hp: '700', seats: '2', price: '90000', topSpeed: '300', description: 'inline 6 beturbo', typeCar: '', year: '2025' })
     const [carSelectDropDown, setSelectDropDown] = useState('');
-
-
 
 
     const valideCar = () => {
@@ -37,6 +33,10 @@ export default function MarkePlace() {
 
             if (insertCarsData(car)) {
                 console.log("Voiture insérée,aller à l'index");
+                setTimeout(() => {
+                        router.push({ pathname: '/acceuil', params: { refresh: true } })
+                }, 2000);
+                 
             }
 
 

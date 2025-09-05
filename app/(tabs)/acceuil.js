@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, createContext, useCallback } from "react";
-import { Link, router, useFocusEffect } from "expo-router";
+import { Link, router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View, Dimensions, Pressable, Image, FlatList, TextInput } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -19,6 +19,7 @@ const { height, width } = Dimensions.get("window");
 export const LikeContext = createContext();
 
 export default function Accueil() {
+    const { refresh } = useLocalSearchParams()
     const [recherche, setRecherche] = useState({ car: '' });
 
     const [carsLogoData, setCarsLogoData] = useState([]);
@@ -61,25 +62,34 @@ export default function Accueil() {
             }
         })
     }
-  const deleteCarsByYear = (year) => {
-    db.withTransactionSync(() => {
-        const result = db.runSync('DELETE FROM Cars WHERE year = ?', [year]);
-        console.log(`${result.changes} voiture(s) supprimée(s) avec l'année ${year}.`);
-    });
-};
+    const deleteCarsByYear = (year) => {
+        db.withTransactionSync(() => {
+            const result = db.runSync('DELETE FROM Cars WHERE year = ?', [year]);
+            console.log(`${result.changes} voiture(s) supprimée(s) avec l'année ${year}.`);
+        });
+    };
 
+    useFocusEffect(
+
+        useCallback(() => {
+
+            if (refresh) {
+                getCarsData();
+            }
+             
+        }, [refresh]),
+    )
 
 
     useEffect(() => {
-                console.log(user)
-                console.log(carsData)
-            // deleteCarsByYear(2025);
+
+        //deleteCarsByYear(2025);
 
         setCarsLogoData(addLink(carsLogo));
     }, [])
 
     useEffect(() => {
-        if (carsData.length < 2 ) {
+        if (carsData.length < 2) {
             setNumColumns(1); // nombre de colonnes à 1 si moins de 2 voitures pour la recherche
         } else {
             setNumColumns(2);
@@ -171,7 +181,7 @@ export default function Accueil() {
             </View>
 
 
-            <View style={{ flex: 1,marginBottom:80 }}
+            <View style={{ flex: 1, marginBottom: 80 }}
             >
                 <FlatList
                     data={carsData}
@@ -215,6 +225,7 @@ export default function Accueil() {
     )
 
 }
+
 
 const styles = StyleSheet.create({
     container: {
