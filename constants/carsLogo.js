@@ -4,7 +4,10 @@ export const carsLogo = [
     { id: 3, name: "BMW", lien: "bmw_logo.png" },
     { id: 4, name: "Mercedes", lien: "mercedes_logo.png" },
     { id: 5, name: "Audi", lien: "audi_logo.png" },
-    { id: 6, name: "Honda", lien: "honda_logo.png" }
+    { id: 6, name: "Honda", lien: "honda_logo.png" },
+    { id: 7, name: "Corvette", lien: "corvette_logo.png" }, 
+    { id: 8, name: "GMC", lien: "gmc_logo.png" }, 
+    { id: 9, name: "Mustang", lien: "mustang_logo.png" }, 
 ];
 
 export const images = {
@@ -14,6 +17,9 @@ export const images = {
     "mercedes_logo.png": require('@/assets/images/mercedes_logo.png'),
     "audi_logo.png": require('@/assets/images/audi_logo.png'),
     "honda_logo.png": require('@/assets/images/honda_logo.png'),
+    "corvette_logo.png": require('@/assets/images/corvette_logo.png'),
+    "gmc_logo.png": require('@/assets/images/gmc_logo.png'),
+    "mustang_logo.png": require('@/assets/images/mustang_logo.png'),
 
     // Ajout des nouvelles clés pour les voitures
     "bmwM4Competition_car.png": require('@/assets/images/bmwM4Competition_car.png'),
@@ -22,6 +28,8 @@ export const images = {
     "vwGtiMk7_car.png": require('@/assets/images/vwGtiMk7_car.png'),
     "audiR8_car.png": require('@/assets/images/audiR8_car.png'),
     "porscheGt3Rs_car.png": require('@/assets/images/porscheGt3Rs_car.png'),
+    "mustangGt.png": require('@/assets/images/mustangGt.png'),
+    "tuckCar.png": require('@/assets/images/tuckCar.png'),
     "defaultUser.png": require('@/assets/images/defaultUser.png'),
 }
 
@@ -31,7 +39,7 @@ export  const dataLogo = [
     { label: 'BMW Competition', value: 'BMW  Competition' },
     { label: 'Mercedes ', value: 'Mercedes ' },
     { label: 'Honda Civic ', value: 'Honda Civic ' },
-    { label: 'Audi R8', value: 'Audi R8' },
+    { label: 'Audi', value: 'Audi R8' },
     { label: 'Porsche', value: 'Porsche ' },
     { label: 'VW ', value: 'VW ' },
      {label: 'Corvette ', value: 'Corvette' },

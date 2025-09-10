@@ -1,8 +1,8 @@
 import { Image } from 'expo-image';
 import { StyleSheet, View, Text, Dimensions, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Link,useRouter } from "expo-router";
-import * as  SQLite  from 'expo-sqlite';
+import { Link, useRouter } from "expo-router";
+import * as  SQLite from 'expo-sqlite';
 import { useEffect } from 'react';
 
 
@@ -10,52 +10,76 @@ const { height, width } = Dimensions.get('window');
 export const db = SQLite.openDatabaseSync('Cars.db');//nom:Issac
 
 export default function HomeScreen() {
-const router = useRouter();
+  const router = useRouter();
 
-    const createTableUsers=() => db.withTransactionSync(()=> db.runSync("CREATE TABLE IF NOT EXISTS " +
-    "User (id INTEGER PRIMARY KEY AUTOINCREMENT,google_id TEXT, name TEXT,email TEXT,picture TEXT, password TEXT,admin INTEGER);" ))
-
-
-    const createTableCars=() => db.withTransactionSync(()=> db.runSync("CREATE TABLE IF NOT EXISTS " +
-        "Cars (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, brand TEXT,year INTEGER, lien TEXT,hp INTEGER,seats INTEGER,price INTEGER,topSpeed INTEGER,description TEXT,typeCar TEXT);" ))
+  const createTableUsers = () => db.withTransactionSync(() => db.runSync("CREATE TABLE IF NOT EXISTS " +
+    "User (id INTEGER PRIMARY KEY AUTOINCREMENT,google_id TEXT, name TEXT,email TEXT,picture TEXT, password TEXT,admin INTEGER);"))
 
 
-        const DeleteTableCars = () => db.withTransactionSync(() => db.runSync("DROP TABLE IF EXISTS  Cars")); 
-        const DeletTableUser = () => db.withTransactionSync(() => db.runSync("DROP TABLE IF EXISTS User")); 
-    
-   
-     
-          
+
+  const createTableCars = () => db.withTransactionSync(() => {
+    db.execSync("PRAGMA foreign_keys = ON;");
+    db.runSync(`
+    CREATE TABLE IF NOT EXISTS Cars (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      brand TEXT,
+      year INTEGER,
+      lien TEXT,
+      hp INTEGER,
+      seats INTEGER,
+      price INTEGER,
+      topSpeed INTEGER,
+      description TEXT,
+      typeCar TEXT,
+      user_id INTEGER,
+      FOREIGN KEY (user_id) REFERENCES User(id)
+    );
+  `);
+  });
 
 
-     function createTables(){
-        createTableUsers();
-        createTableCars();
-        console.log("Les tables on été créés");
-    }
-const insertCarsData = () => db.withTransactionSync(() => {
-  db.runSync(
-    `INSERT INTO Cars (name, brand, year, lien, hp, seats, price, topSpeed, description, typeCar) VALUES
-      ('BMW M4 Compétition', 'BMW', 2023, 'bmwM4Competition_car.png', 510, 4, 89000, 290, 'Coupé sportif allemand, propulsion, moteur 6 cylindres en ligne biturbo.', 'sport'),
-      ('Mercedes AMG GT', 'Mercedes', 2022, 'mercedesAmgGt_car.png', 530, 2, 120000, 312, 'Coupé sportif hautes performances, V8 biturbo.', 'sport'),
-      ('Honda Civic Type R', 'Honda', 2023, 'hondaCivicTypeR_car.png', 329, 4, 48000, 272, 'Compacte sportive japonaise, traction, moteur 4 cylindres turbo.', 'sport'),
-      ('Volkswagen GTI MK7', 'Volkswagen', 2019, 'vwGtiMk7_car.png', 245, 5, 35000, 250, 'Icône des compactes sportives, moteur 4 cylindres turbo.', 'sport'),
-      ('Audi R8', 'Audi', 2022, 'audiR8_car.png', 620, 2, 160000, 330, 'Supercar allemande, V10 atmosphérique, transmission intégrale.', 'sport'),
-      ('Porsche GT3 RS', 'Porsche', 2023, 'porscheGt3Rs_car.png', 525, 2, 230000, 296, 'Version radicale de la 911, moteur 6 cylindres à plat, usage circuit.', 'sport')
+  const DeleteTableCars = () => db.withTransactionSync(() => db.runSync("DROP TABLE IF EXISTS  Cars"));
+  const DeletTableUser = () => db.withTransactionSync(() => db.runSync("DROP TABLE IF EXISTS User"));
+  const ajouterColonneCars = () => db.withTransactionSync(() => db.runSync("ALTER TABLE Cars ADD COLUMN user_id INTEGER;"));
+  const supprimerColonneCars = () => db.withTransactionSync(() => db.runSync("ALTER TABLE Cars DROP COLUMN proprietaire"));
+  const ajouterContrainteCars = () => db.withTransactionSync(() => { db.execSync("PRAGMA foreign_keys = ON;"); db.runSync("ALTER TABLE Cars ADD CONSTRAINT fk_car_user FOREIGN KEY (user_id) REFERENCES User(id);") });
+ 
+
+
+
+
+
+
+  function createTables() {
+    createTableUsers();
+    createTableCars();
+    console.log("Les tables on été créés");
+  }
+  const insertCarsData = () => db.withTransactionSync(() => {
+    db.runSync(
+      `INSERT INTO Cars (name, brand, year, lien, hp, seats, price, topSpeed, description, typeCar,user_id) VALUES
+      ('BMW M4 Compétition', 'BMW', 2023, 'bmwM4Competition_car.png', 510, 4, 89000, 290, 'Coupé sportif allemand, propulsion, moteur 6 cylindres en ligne biturbo.', 'sport',1),
+      ('Mercedes AMG GT', 'Mercedes', 2022, 'mercedesAmgGt_car.png', 530, 2, 120000, 312, 'Coupé sportif hautes performances, V8 biturbo.', 'sport',2),
+      ('Honda Civic Type R', 'Honda', 2023, 'hondaCivicTypeR_car.png', 329, 4, 48000, 272, 'Compacte sportive japonaise, traction, moteur 4 cylindres turbo.', 'sport',3),
+      ('Volkswagen GTI MK7', 'Volkswagen', 2019, 'vwGtiMk7_car.png', 245, 5, 35000, 250, 'Icône des compactes sportives, moteur 4 cylindres turbo.', 'sport',4),
+      ('Audi R8', 'Audi', 2022, 'audiR8_car.png', 620, 2, 160000, 330, 'Supercar allemande, V10 atmosphérique, transmission intégrale.', 'sport',5),
+      ('Porsche GT3 RS', 'Porsche', 2023, 'porscheGt3Rs_car.png', 525, 2, 230000, 296, 'Version radicale de la 911, moteur 6 cylindres à plat, usage circuit.', 'sport',6)
     ;`
-);
-console.log("Données insérées dans la table Cars");
-});
+    );
+    console.log("Données insérées dans la table Cars");
+  });
+//  const insertCarsData1 = () => db.withTransactionSync(() => {
+//     db.runSync(
+//       `INSERT INTO Cars (name, brand, year, lien, hp, seats, price, topSpeed, description, typeCar,user_id) VALUES
+//       ('Mustang GT', 'Mustang', 1969, 'mustangGt.png', 530, 4, 100000, 290, 'Muscle car, v8 engine .', 'sport',7),
+//       ('GMC Truck', 'GMC', 2020, 'tuckCar.png', 420, 5, 80000, 250, 'Truck, V6 engine .', 'sport',7)`
 
-    useEffect(() => {
-      //createTables();
-
-      //createTableCars();
-      //insertCarsData();
-      //DeletTableUser();
-      //DeleteTableCars()
-      //insertCarsData()
-    },[]);
+//     );
+//     console.log("Données insérées dans la table Cars");
+//   });
+  useEffect(() => {
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -130,8 +154,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'white',
   },
-  title:{
-     fontSize: 30,
+  title: {
+    fontSize: 30,
     color: 'white',
   },
   carLogo: {

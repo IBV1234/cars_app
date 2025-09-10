@@ -69,6 +69,21 @@ export default function Accueil() {
         });
     };
 
+
+      const getInfoUsers = () => {
+        db.withTransactionSync(() => {
+            const users = db.getAllSync(`SELECT name FROM User;`);
+
+            if (users.length > 0) {
+                console.log(users);
+            } else {
+                console.log("Aucun user trouvé dans la base de données.");
+            }
+
+        }
+        )
+    }
+
     useFocusEffect(
 
         useCallback(() => {
@@ -76,7 +91,7 @@ export default function Accueil() {
             if (refresh) {
                 getCarsData();
             }
-             
+
         }, [refresh]),
     )
 
@@ -84,7 +99,7 @@ export default function Accueil() {
     useEffect(() => {
 
         //deleteCarsByYear(2025);
-
+        //getInfoUsers();
         setCarsLogoData(addLink(carsLogo));
     }, [])
 
@@ -211,6 +226,28 @@ export default function Accueil() {
                                 }}>
                                     {likeIds.has(item.id) ? (<AntDesign name={'heart'} size={27} color="#B22222" />) : (<AntDesign name={'hearto'} size={27} color="#B22222" />)}
                                 </Pressable>
+
+                                {/* <View style={{ marginVertical: 10,marginLeft:6, position: 'absolute', top: 5 } }>
+                                 {user.picture === '' ? (
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', height: 80, width: 85, backgroundColor: 'grey', borderRadius: 60 }}>
+
+                                        <FontAwesome name="user" size={70} color="#8B0000" style={{ width: 70, height: 70, marginLeft: width * 0.06 }} />
+
+                                    </View>
+                                )
+                                    :
+                                    (
+
+                                        <Image source={{ uri: user.picture }} style={{
+                                            width: width * 0.10,
+                                            height: width * 0.10,
+                                            borderRadius: (width * 0.10) / 2
+                                        }} resizeMode="cover" />
+
+                                    )
+                                }
+                                </View> */}
+
                             </View>
                         );
                     }}

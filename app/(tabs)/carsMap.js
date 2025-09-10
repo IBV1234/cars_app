@@ -7,11 +7,12 @@ import { carsLocation } from "@/constants/carsPositions";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet, Text, View, Image, Dimensions, Pressable, ScrollView, } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { getLocation } from '../../fonctions/fonctions';
+import { getLocation, addLink } from '../../fonctions/fonctions';
 import { UserContex } from './connection';
 import { Buttons } from '@/components/custom/custom';
 import MapView, { Marker } from 'react-native-maps';
 import { useFocusEffect } from '@react-navigation/native';
+import { push } from 'expo-router/build/global-state/routing';
 
 const { height, width } = Dimensions.get('window');
 
@@ -23,6 +24,7 @@ export default function CarsMap() {
     const { user } = useContext(UserContex);
     const [userHomeLocation, setUserHomeLocation] = useState({ latitude: 0, longitude: 0, latitudeDelta: 0.01, longitudeDelta: 0.01 })
     const [showInfoUser, setShowInfoUser] = useState(true);
+    const [images, setImages] = useState([]);
 
     const [dealerUser, setDealertUser] = useState({
         id: null,
@@ -48,7 +50,7 @@ export default function CarsMap() {
     const markerRefs = useRef([null, null]); // refs pour markers
 
     const fetchLocation = async () => {
-       // console.log('userHomeLocation', userHomeLocation);
+        // console.log('userHomeLocation', userHomeLocation);
 
         if (userHomeLocation.latitude === 0 && userHomeLocation.longitude === 0) {
             const userLocation = await getLocation();
@@ -65,7 +67,7 @@ export default function CarsMap() {
                 setUserHomeLocation(positionInitiale);
 
                 houseRef.current = positionInitiale;
-               // console.log(' dans if houseRef.current = userHomeLocation')
+                // console.log(' dans if houseRef.current = userHomeLocation')
 
                 if (mapRef.current) {
                     mapRef.current.animateToRegion(positionInitiale, 1000)// anime vers la  position
@@ -114,6 +116,14 @@ export default function CarsMap() {
             carRef.current = positionInitiale; // référence pour pin / recentrage
             //console.log('carRef.current = positionInitiale;')
             if (dealerUser.id !== carLocation.id) {
+                let imagesx = [];
+                if (carLocation.lien) imagesx.push(carLocation.lien);
+                if (carLocation.image) imagesx.push(carLocation.image);
+                if (carLocation.image2) imagesx.push(carLocation.image2);
+                imagesx = imagesx.filter((value, index, self) => self.indexOf(value) === index)
+                setImages(imagesx);
+                console.log('images', images);
+
                 setDealertUser({ ...dealerUser, ...carLocation });
                 setShowInfoUser(false);
             }
@@ -128,12 +138,12 @@ export default function CarsMap() {
             //console.log('carRef.current', carRef.current);
             fetchLocation();
         }
-      
+
     }
 
 
     useEffect(() => {
-        //console.log(' dans  useEffect', carLocation);
+        console.log(' dans  useEffect', carLocation);
 
         fetcth();
     }, [carLocation]);
@@ -145,10 +155,11 @@ export default function CarsMap() {
 
         useCallback(() => {
             console.log('useFocusEffect ');
+            console.log("carLocation dans useFocusEffect", carLocation);
 
 
             if (mapRef.current && carRef.current == null) {
-               // console.log('anime vers la  position de la maison')
+                // console.log('anime vers la  position de la maison')
                 mapRef.current.animateToRegion(houseRef.current, 1000)
                 // anime vers la  position de la maison
             } else if (mapRef.current && carRef.current != null) {
@@ -234,6 +245,8 @@ export default function CarsMap() {
                             pinColor="red"
                             onPress={() => {
                                 if (dealerUser.id !== carLocation.id) {
+
+
                                     setDealertUser({ ...dealerUser, ...carLocation });
                                     setShowInfoUser(false);
 
@@ -241,28 +254,29 @@ export default function CarsMap() {
                             }}
                         />
                     ) :
-                     (// sinon afficher toutes les voitures
-                        <>
-                            {cars && cars.map((data) => (
-                                <Marker
-                                    key={data.id}
-                                    title={data.ownerName}
-                                    description={`Voiture située à ${data.city}`}
-                                    coordinate={data.location}
-                                    ref={(ref) => {
-                                        if (ref) markerRefs.current[data.id] = ref;
-                                    }}
-                                    pinColor="red"
-                                    onPress={() => {
-                                        if (dealerUser.id !== data.id) {
-                                            setDealertUser({ ...dealerUser, ...data });
-                                            setShowInfoUser(false);
-                                        }
-                                    }}
-                                />
-                            ))}
-                        </>
-                    )}
+                        (// sinon afficher toutes les voitures
+                            <>
+                                {cars && cars.map((data) => (
+                                    <Marker
+                                        key={data.id}
+                                        title={data.ownerName}
+                                        description={`Voiture située à ${data.city}`}
+                                        coordinate={data.location}
+                                        ref={(ref) => {
+                                            if (ref) markerRefs.current[data.id] = ref;
+                                        }}
+                                        pinColor="red"
+                                        onPress={() => {
+                                            if (dealerUser.id !== data.id) {
+                                               
+                                                setDealertUser({ ...dealerUser, ...data });
+                                                setShowInfoUser(false);
+                                            }
+                                        }}
+                                    />
+                                ))}
+                            </>
+                        )}
 
 
 
@@ -316,6 +330,19 @@ export default function CarsMap() {
                                     marginRight: 16,
                                     borderColorBottom: 'black',
                                 }}>
+
+                                    {/* {
+                                        images.map((imgSrc, index) => (
+                                            <Image
+                                                key={index}
+                                                source={dealerUser && !showInfoUser ? imgSrc : require('@/assets/images/porscheGt3Rs_car.png')}
+                                                style={{ width: width * 0.20, height: width * 0.20 }}
+                                                resizeMode="contain"
+                                            />
+                                        ))
+                                } */}
+                                    
+
 
                                     <Image
                                         source={dealerUser && !showInfoUser ? dealerUser.image : require('@/assets/images/porscheGt3Rs_car.png')}

@@ -7,7 +7,7 @@ import { carsLocation } from "@/constants/carsPositions";
 export const Buttons = ({ text, fonction, userouter = false, carData = null }) => {
     const router = useRouter();
 
-    
+
     return (
 
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -45,20 +45,45 @@ export const AffciherImage = ({ item, styles, mix, loading, setLoading }) => {
     useEffect(() => {
         let itemWithLocation = getLocationUserCar(item.id);
         if (itemWithLocation) {
-            setCar(prev => ({ ...prev, ...itemWithLocation }));
+            setCar(oldData => ({ ...oldData, ...itemWithLocation }));
         }
     }, [item]);
     // console.log('item dans fonction AffciherImage ', itemWithLocation);
+    let images = [];
+    if (item.lien) images.push(item.lien);
+    if (item.image) images.push(item.image);
+    if (item.image2) images.push(item.image2);
+    images = images.filter((value,index,self)=> self.indexOf(value)===index) // self: le tableau cu complet self.indexOf(value): l'index de value dans self || retire les doublons
+
     return (
-        <Pressable style={mix ? styles.imgCar2 : styles.imgCar} onPress={() => { router.push({ pathname: '/details', params: { item: JSON.stringify(car) } }) }}>
+        <Pressable style={mix ? styles.imgCar2 : styles.imgCar}
+            onPress={() => {
+                router.push(
+                    {
+                        pathname: '/details',
+                        params: { item: JSON.stringify(car) }
+                    })
+            }}>
+
             {loading ?
                 (<Image source={require('@/assets/images/loading-gif.webp')} style={styles.iconCarsImage}
 
 
                 />)
-                : <Image source={item.lien} style={mix ? styles.iconCarsImage2 : styles.iconCarsImage} onLoadEnd={() => setLoading(false)}
+                : <View>
+                    {images.map((imSrc, index) => (
+                        <Image key={index} 
+                        source={imSrc} 
+                        style={styles.iconCarsImage}
+                        onLoadEnd={() => setLoading(false)}
+                        resizeMethod='cover'
+                        />
 
-                />}
+                    ))}
+
+                </View>
+
+            }
         </Pressable>
     )
 }

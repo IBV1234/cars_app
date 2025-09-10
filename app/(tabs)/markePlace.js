@@ -20,8 +20,7 @@ export default function MarkePlace() {
     const { user } = useContext(UserContex); // Utilisation du contexte
     const router = useRouter();
 
-    const [car, setCar] = useState({ name: 'BWM M4', brand: '', lien: '', hp: '700', seats: '2', price: '90000', topSpeed: '300', description: 'inline 6 beturbo', typeCar: '', year: '2025' })
-    const [carSelectDropDown, setSelectDropDown] = useState('');
+    const [car, setCar] = useState({ name: 'BWM M4', brand: '', lien: '', hp: '700', seats: '2', price: '90000', topSpeed: '300', description: 'inline 6 beturbo', typeCar: '', year: '2025' ,userName:''})
 
 
     const valideCar = () => {
@@ -126,6 +125,16 @@ export default function MarkePlace() {
                                 placeholderTextColor="black"
                                 value={car.name}
                                 onChangeText={(nom) => setCar({ ...car, name: nom })}
+                            />
+                        </View>
+
+                           <View style={{ width: 300, height: 50 }}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder={'Entrer votre nom '}
+                                placeholderTextColor="black"
+                                value={car.name}
+                                onChangeText={(user_name) => setCar({ ...car, userName: user_name })}
                             />
                         </View>
 

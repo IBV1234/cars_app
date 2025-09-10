@@ -4,7 +4,7 @@ export const carsLocation = [
         ownerName: "Noah Lefebvre",
         name: "BMW M4 Competition",
         image: require("../assets/images/bmwM4Competition_car.png"),
-        lien:15,
+        lien: 15,
         city: "Laval",
         location: {
             latitude: 45.57294751538974,
@@ -18,7 +18,7 @@ export const carsLocation = [
         ownerName: "Jean Flex",
         name: "Mercedes AMG GT",
         image: require("../assets/images/mercedesAmgGt_car.png"),
-        lien:16,
+        lien: 16,
         city: "Montréal",
         location: {
             latitude: 45.489013795142114,
@@ -32,7 +32,7 @@ export const carsLocation = [
         ownerName: "Léa Tremblay",
         name: "Volkswagen GTI Mk7",
         image: require("../assets/images/vwGtiMk7_car.png"),
-        lien:18,
+        lien: 18,
         city: "Montréal",
         location: {
             latitude: 45.53606173316433,
@@ -46,7 +46,7 @@ export const carsLocation = [
         ownerName: "Jules Gagnon",
         name: "Audi R8",
         image: require("../assets/images/audiR8_car.png"),
-        lien:19,
+        lien: 19,
         city: "Montréal",
         location: {
             latitude: 45.49784186751103,
@@ -60,7 +60,7 @@ export const carsLocation = [
         ownerName: "Emma Girard",
         name: "Porsche GT3 RS",
         image: require("../assets/images/porscheGt3Rs_car.png"),
-        lien:20,
+        lien: 20,
         city: "Laval",
         location: {
             latitude: 45.56626580447386,
@@ -74,7 +74,7 @@ export const carsLocation = [
         ownerName: "Marc Deval",
         name: "Honda Civic type r",
         image: require("../assets/images/hondaCivicTypeR_car.png"),
-        lien:17,
+        lien: 17,
         city: "Laval",
         location: {
             latitude: 45.663903251207586,
@@ -83,5 +83,21 @@ export const carsLocation = [
         phone: "514-123-4567",
         email: "marc.deval@email.com",
     },
- 
+
+    {
+        id: 7,
+        ownerName: "Laurie",
+        nameImage1: "Mustang GT",
+        nameImage2: "GMC Truck",
+        image: require("../assets/images/mustangGt.png"),
+        image2: require("../assets/images/tuckCar.png"),
+        city: "Laval",
+        location: {
+            latitude: 45.54566673101559,
+            longitude: -73.76198288729147,
+        },
+        phone: "514-123-4563",
+        email: "Laurie@email.com",
+    },
+
 ];

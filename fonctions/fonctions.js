@@ -6,6 +6,7 @@ import { images } from "@/constants/carsLogo";
 import * as Location from 'expo-location';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Alert } from 'react-native';
+import { carsLocation } from "@/constants/carsPositions";
 
 
 import * as ImagePicker from 'expo-image-picker';
@@ -57,13 +58,24 @@ export const addLink = (Data) => {
             //  photo locale depuis ImagePicker
             return {
                 ..._data,
-                lien: { uri: _data.lien }, 
+                lien: { uri: _data.lien },
             };
-        } else {
+        } else if (_data.lien !==undefined) {
             // Cas image fixe déjà dans projet
             return {
                 ..._data,
                 lien: images[_data.lien] || '',
+            };
+        }else if (_data.image !==undefined && _data.lien === undefined) {
+            // Cas image fixe déjà dans projet
+            return {
+                ..._data,
+                lien: images[_data.image] || '',
+            };
+        }else if (_data.image2 !==undefined && _data.lien === undefined) {
+            return {
+                ..._data,
+                lien: images[_data.image2] || '',
             };
         }
     });
@@ -95,38 +107,58 @@ export const insertUserInBd = (personne) => {
     }
 }
 
-export const handleEditCar = async (car,setCar) => {
-        Alert.alert(
-            "Attention",
-            "Vous devez retirer le fond écran de l'image avant de l'utiliser",
-            [
-                {
-                    text: "Annuler",
-                    style: "cancel"
-                },
-                {
-                    text: "OK",
-                    onPress: async () => {
-                        try {
-                            const result = await editCarPic(car, setCar);
-                            console.log(result);
-                        } catch (error) {
-                            console.error(error);
-                        }
+export const handleEditCar = async (car, setCar) => {
+    Alert.alert(
+        "Attention",
+        "Vous devez retirer le fond écran de l'image avant de l'utiliser",
+        [
+            {
+                text: "Annuler",
+                style: "cancel"
+            },
+            {
+                text: "OK",
+                onPress: async () => {
+                    try {
+                        const result = await editCarPic(car, setCar);
+                        console.log(result);
+                    } catch (error) {
+                        console.error(error);
                     }
                 }
-            ],
-            { cancelable: true }
+            }
+        ],
+        { cancelable: true }
+    );
+};
+
+export const getIdUserByName = (name) => {
+  if(name!==''){
+      try {
+        const UserInBd = db.getAllSync(
+            'SELECT id FROM User WHERE name = ?',
+            [name]
         );
-    };
-
-
+        if (UserInBd.length > 0) {
+            console.log("Utilisateur trouvé dans la base de données");
+            return UserInBd[0];
+        } else {
+            console.log("Utilisateur non trouvé dans la base de données");
+            return null;
+        }
+    } catch (error) {
+        console.error("Erreur dans la validation de l'utilisateur", error);
+        return null;
+    }
+  } return null;
+}
 export const insertCarsData = (car) => {
+    let id = getIdUserByName(car.userName);
     try {
         db.withTransactionAsync(() => {
             console.log("insertCarsData", car)
             db.runSync(
-                "INSERT INTO Cars (name, brand, year, lien, hp, seats, price, topSpeed, description, typeCar) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                "INSERT INTO Cars (name, brand, year, lien, hp, seats, price, topSpeed, description, typeCar,user_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
                 [
                     car.name ?? '',
                     car.brand ?? '',
@@ -138,6 +170,7 @@ export const insertCarsData = (car) => {
                     parseInt(car.topSpeed) || 0,
                     car.description ?? '',
                     car.typeCar ?? '',
+                    parseInt(id) || null
                 ]
             );
         });
@@ -147,6 +180,7 @@ export const insertCarsData = (car) => {
         console.error("ERREUR dans l'insertion d'une voiture", err);
         return false
     }
+
 }
 
 
