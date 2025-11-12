@@ -268,7 +268,7 @@ export default function CarsMap() {
                                         pinColor="red"
                                         onPress={() => {
                                             if (dealerUser.id !== data.id) {
-                                               
+
                                                 setDealertUser({ ...dealerUser, ...data });
                                                 setShowInfoUser(false);
                                             }
@@ -331,17 +331,15 @@ export default function CarsMap() {
                                     borderColorBottom: 'black',
                                 }}>
 
-                                    {/* {
-                                        images.map((imgSrc, index) => (
-                                            <Image
-                                                key={index}
-                                                source={dealerUser && !showInfoUser ? imgSrc : require('@/assets/images/porscheGt3Rs_car.png')}
-                                                style={{ width: width * 0.20, height: width * 0.20 }}
-                                                resizeMode="contain"
-                                            />
-                                        ))
-                                } */}
-                                    
+                                    {/* {dealerUser?.images?.map((imgSrc, index) => (
+                                        <Image
+                                            key={index}
+                                            source={dealerUser && !showInfoUser ? imgSrc : require('@/assets/images/porscheGt3Rs_car.png')}
+                                            style={{ width: width * 0.30, height: width * 0.30 }}
+                                            resizeMode="contain"
+                                        />
+                                    ))} */}
+
 
 
                                     <Image

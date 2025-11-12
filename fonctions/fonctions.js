@@ -82,6 +82,7 @@ export const addLink = (Data) => {
 };
 
 
+
 export const insertUserInBd = (personne) => {
     try {
         db.withTransactionSync(() => {
