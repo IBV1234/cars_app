@@ -3,9 +3,10 @@ import { useFonts } from 'expo-font';
 import { useState } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { UserContex, RememberMeContext } from './(tabs)/connection';
+import {  RememberMeContext } from './(tabs)/connection';
 import { LikeContext} from './(tabs)/acceuil';
 import 'react-native-reanimated';
+import { UserProvider } from '@/context/userContext';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -25,7 +26,7 @@ export default function RootLayout() {
 
 
   return (
-    <UserContex.Provider value={{ user, setUser }}>
+    <UserProvider>
       <LikeContext.Provider value= {{ likeIds, setLikeIds }}>
       <RememberMeContext.Provider value={{ isSelected, setSelection }}>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -38,7 +39,7 @@ export default function RootLayout() {
         </ThemeProvider>
       </RememberMeContext.Provider>
     </LikeContext.Provider>
-    </UserContex.Provider >
+    </UserProvider >
 
   );
 }

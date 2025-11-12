@@ -60,11 +60,7 @@ export default function TabLayout() {
         name="acceuil"
         options={{href:null}} 
         /> */}
-      <Tabs.Screen
-        name="explore"
-        options={{href:null}} 
 
-      />
         <Tabs.Screen
         name="carsMap"
           options={{href:null}} 

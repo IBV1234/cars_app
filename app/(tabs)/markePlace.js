@@ -1,26 +1,33 @@
 
-import React, { useState, useEffect, useContext } from 'react';
-import { useRouter, Link } from 'expo-router';
+import React, { useState, useContext, useRef, useCallback } from 'react';
+import { useRouter, Link, useFocusEffect } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { StyleSheet, Text, View, Dimensions, Image, TextInput, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { insertCarsData, dropDownComponent, handleEditCar } from '../../fonctions/fonctions';
-import { Buttons } from '@/components/custom/custom';
+import { Buttons,AnimatadeBoutton } from '@/components/custom/custom';
 import { dataLogo, dataCarTypes } from '../../constants/carsLogo';
 import * as  SQLite from 'expo-sqlite';
 import { db } from "./index";
+// import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import * as Animatable from 'react-native-animatable';
 
-import { UserContex, } from './connection';
-
+// import { UserContex, } from './connection';
+import { useUser } from '@/context/userContext';
 const { height, width } = Dimensions.get('window');
 
 export default function MarkePlace() {
+    // const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-
-    const { user } = useContext(UserContex); // Utilisation du contexte
+    const imageRef = useRef(null);
+    // const scale = useSharedValue(1);
+    // const animatedStyle = useAnimatedStyle(() => ({
+    //     transform: [{ scale: scale.value }],
+    // }));
+    const { user } = useUser() // Utilisation du contexte
     const router = useRouter();
 
-    const [car, setCar] = useState({ name: 'BWM M4', brand: '', lien: '', hp: '700', seats: '2', price: '90000', topSpeed: '300', description: 'inline 6 beturbo', typeCar: '', year: '2025' ,userName:''})
+    const [car, setCar] = useState({ name: 'BWM M4', brand: '', lien: '', hp: '700', seats: '2', price: '90000', topSpeed: '300', description: 'inline 6 beturbo', typeCar: '', year: '2025', userName: '' })
 
 
     const valideCar = () => {
@@ -33,9 +40,9 @@ export default function MarkePlace() {
             if (insertCarsData(car)) {
                 console.log("Voiture insérée,aller à l'index");
                 setTimeout(() => {
-                        router.push({ pathname: '/acceuil', params: { refresh: true } })
+                    router.push({ pathname: '/acceuil', params: { refresh: true } })
                 }, 2000);
-                 
+
             }
 
 
@@ -47,6 +54,20 @@ export default function MarkePlace() {
 
     };
 
+    useFocusEffect(
+        useCallback(() => {
+
+            if (imageRef.current && imageRef.current.fadeIn) {//essayer deux méthodes différentes pour lancer l'animation
+                imageRef.current.fadeIn(1000);
+            } else if (imageRef.current && imageRef.current.animate) {
+                imageRef.current.animate("fadeIn", 1000);
+
+            }
+            return () => {
+                imageRef.current.fadeIn(3000);
+            }
+        }, [])
+    )
 
     return (
         <View style={styles.containerConnexion}>
@@ -88,17 +109,73 @@ export default function MarkePlace() {
                 </View>
             </View >
 
-            <View style={{ alignSelf: 'center', top: width * 0.25 }}>
-                <Image source={{ uri: car.lien }} style={{
-                    width: 245,
-                    height: 140,
-                    borderRadius: 20,
-                    objectFit: 'cover'
+            <View style={{
+                alignSelf: 'center', top: width * 0.25, shadowColor: 'black',
+                shadowOffset: { width: 0, height: 3 },
+                shadowOpacity: 0.8,
+                shadowRadius: 3,
+            }}>
+                {
+                    car.lien !== '' ? (
+                        <Animatable.Image
+                            ref={imageRef}
+                            animation="fadeIn"
+                            duration={3000}
+                            source={{ uri: car.lien }} style={{
+                                width: 245,
+                                height: 140,
+                                borderRadius: 20,
+                                objectFit: 'cover'
 
-                }} />
+                            }}
+                        />
+                    ) :
+                        (
+                            <Animatable.Image
+                                ref={imageRef}
+                                animation="fadeIn"
+                                duration={2000}
+                                source={require('../../assets/images/default_car.jpg')}
+                                style={{
+                                    width: 245,
+                                    height: 140,
+                                    borderRadius: 20,
+                                    objectFit: 'cover'
+
+                                }}
+                            />
+                        )
+
+
+                }
             </View>
-            <View style={{ top: width * 0.30 }}>
-                <Buttons text={'Add'} fonction={valideCar} />
+            <View style={{
+                top: width * 0.30, shadowColor: 'black',
+                shadowOffset: { width: 0, height: 3 },
+                shadowOpacity: 0.8,
+                shadowRadius: 3,
+            }}>
+                {/* <Buttons text={'Add'}   fonction={valideCar} /> */}
+                {/* <AnimatedPressable
+                    onPressIn={() => { scale.value = withSpring(0.9); }}
+                    onPressOut={() => { scale.value = withSpring(1); valideCar(); }}
+                    style={[{
+                        alignSelf: 'center',
+                        borderRadius: 20,
+                        width: 230,
+                        height: 50,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        shadowColor: 'black',
+                        shadowOffset: { width: 0, height: 3 },
+                        shadowOpacity: 0.4,
+                        shadowRadius: 2,
+                        backgroundColor: 'rgba(218, 5, 5, 0.8)',
+                    }, animatedStyle]}
+                >
+                    <Text style={{ color: 'white', fontSize: 15 }}>Ajouter la voiture</Text>
+                </AnimatedPressable> */}
+                <AnimatadeBoutton text={'Ajouter la voiture'} fonction={valideCar} />
 
             </View>
             <LinearGradient style={styles.containerConnexion2}
@@ -125,7 +202,7 @@ export default function MarkePlace() {
                             />
                         </View>
 
-                           <View style={{ width: 300, height: 50 }}>
+                        <View style={{ width: 300, height: 50 }}>
                             <TextInput
                                 style={styles.input}
                                 placeholder={'Entrer votre nom '}
@@ -140,7 +217,7 @@ export default function MarkePlace() {
                                 style={{ width: 300, height: 50, marginTop: 20, justifyContent: 'center', alignItems: 'center', borderColor: 'black', borderWidth: 2, borderRadius: 30, }}
                                 onPress={async () => {
 
-                                  handleEditCar(car,setCar);
+                                    handleEditCar(car, setCar);
                                 }}
                             >
                                 <Text style={{ fontSize: 18 }}> Entrer une image</Text>

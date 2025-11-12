@@ -3,6 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import { carsLocation } from "@/constants/carsPositions";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 export const Buttons = ({ text, fonction, userouter = false, carData = null }) => {
     const router = useRouter();
@@ -53,10 +54,10 @@ export const AffciherImage = ({ item, styles, mix, loading, setLoading }) => {
     if (item.lien) images.push(item.lien);
     if (item.image) images.push(item.image);
     if (item.image2) images.push(item.image2);
-    images = images.filter((value,index,self)=> self.indexOf(value)===index) // self: le tableau au complet self.indexOf(value): l'index de value dans self || retire les doublons
-//style={mix ? styles.imgCar2 : styles.imgCar}
+    images = images.filter((value, index, self) => self.indexOf(value) === index) // self: le tableau au complet self.indexOf(value): l'index de value dans self || retire les doublons
     return (
-        <Pressable className=''
+        <Pressable style={mix ? styles.imgCar2 : styles.imgCar}
+
             onPress={() => {
                 router.push(
                     {
@@ -70,13 +71,13 @@ export const AffciherImage = ({ item, styles, mix, loading, setLoading }) => {
 
 
                 />)
-                : <View>
+                : <View >
                     {images.map((imSrc, index) => (
-                        <Image key={index} 
-                        source={imSrc} 
-                        style={styles.iconCarsImage}
-                        onLoadEnd={() => setLoading(false)}
-                        resizeMethod='cover'
+                        <Image key={index}
+                            source={imSrc}
+                            style={styles.iconCarsImage}
+                            onLoadEnd={() => setLoading(false)}
+                            resizeMethod='cover'
                         />
 
                     ))}
@@ -85,6 +86,29 @@ export const AffciherImage = ({ item, styles, mix, loading, setLoading }) => {
 
             }
         </Pressable>
+    )
+}
+
+export const AnimatadeBoutton = ({ text, fonction }) => {
+    const scale = useSharedValue(1);
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }],
+    }));
+    return (
+        <Animated.View style={animatedStyle}
+            animation="bounceIn"
+            duration={1000}>
+            <Pressable
+                onPressIn={() => { scale.value = withSpring(0.9); }}
+                onPressOut={() => {
+                    scale.value = withSpring(1); // withSpring(1, { damping: 10, stiffness: 200 }stiffness pour un retour plus rapide damping pour réduire les sauts
+                    ; fonction();
+                }}
+                style={[styles.boutton, { backgroundColor: 'rgba(218, 5, 5, 0.8)', alignSelf: 'center' }]}
+            >
+                <Text style={{ color: 'white', fontSize: 15 }}>{text}</Text>
+            </Pressable>
+        </Animated.View>
     )
 }
 

@@ -7,12 +7,11 @@ import { carsLocation } from "@/constants/carsPositions";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet, Text, View, Image, Dimensions, Pressable, ScrollView, } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { getLocation, addLink } from '../../fonctions/fonctions';
-import { UserContex } from './connection';
+import { getLocation } from '../../fonctions/fonctions';
+import { useUser } from '@/context/userContext';
 import { Buttons } from '@/components/custom/custom';
 import MapView, { Marker } from 'react-native-maps';
 import { useFocusEffect } from '@react-navigation/native';
-import { push } from 'expo-router/build/global-state/routing';
 
 const { height, width } = Dimensions.get('window');
 
@@ -21,7 +20,7 @@ export default function CarsMap() {
     //console.log('item carsMap', item);
     const carLocation = item ? JSON.parse(item) : null;
 
-    const { user } = useContext(UserContex);
+    const { user } = useUser();
     const [userHomeLocation, setUserHomeLocation] = useState({ latitude: 0, longitude: 0, latitudeDelta: 0.01, longitudeDelta: 0.01 })
     const [showInfoUser, setShowInfoUser] = useState(true);
     const [images, setImages] = useState([]);

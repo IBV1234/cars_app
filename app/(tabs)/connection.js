@@ -6,6 +6,7 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import Zocial from '@expo/vector-icons/Zocial';
 import { useFocusEffect } from '@react-navigation/native';
 import Checkbox from 'expo-checkbox';
+import {useUser} from '@/context/userContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
@@ -13,12 +14,12 @@ import { Dimensions, Pressable, StyleSheet, Text, TextInput, View } from 'react-
 
 
 const { height, width } = Dimensions.get('window');
-export const UserContex = createContext();
+// export const UserContex = createContext();
 export const RememberMeContext = createContext();
 
 export default function Connexion() {
 
-    const { user, setUser } = useContext(UserContex);
+    const { user, setUser } = useUser();
     const { isSelected, setSelection } = useContext(RememberMeContext);
 
     const [personne, setPersonne] = useState({ name: '', email: 'Zack@gmail.com', password: '123', picture: '' });
@@ -37,10 +38,7 @@ export default function Connexion() {
     // };
 
     const fetchSession = () => {
-        // console.log('isSelected:', isSelected);
-        // console.log('user.email:', user.email);
-        // console.log('user.password:', user.password);
-        // console.log('Condition:', isSelected && user.email.length > 0 && user.password.length > 0);
+
         if (isSelected && user.email.length > 0 && user.password.length > 0) {
             setPersonne({ ...personne, password: user.password, email: user.email });
 

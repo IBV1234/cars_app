@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, createContext, useCallback } from "react";
+import React, { useContext, useState, useEffect, createContext, useCallback ,useMemo} from "react";
 import { Link, router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View, Dimensions, Pressable, Image, FlatList, TextInput } from "react-native";
@@ -6,10 +6,9 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { carsLogo } from "@/constants/carsLogo";
-import { UserContex } from './connection';
+import { useUser } from "@/context/userContext";
 import { formatNumberWithThousandsSeparator, toogleLike, addLink } from '@/fonctions/fonctions';
 import { AffciherImage } from '@/components/custom/custom';
-
 import * as Localization from "expo-localization";
 import { I18n } from "i18n-js";
 import { db } from "./index";
@@ -21,10 +20,9 @@ export const LikeContext = createContext();
 export default function Accueil() {
     const { refresh } = useLocalSearchParams()
     const [recherche, setRecherche] = useState({ car: '' });
-
     const [carsLogoData, setCarsLogoData] = useState([]);
     const [carsData, setCarsData] = useState([]);
-    const { user } = useContext(UserContex);
+    const { user } =  useUser();
     const { likeIds, setLikeIds } = useContext(LikeContext);
     // const [likeIds, setLikeIds] = useState(new Set);// set est un  tableau like avec les ids  et  qui stocke des éléments uniques.
     const [loading, setLoading] = useState(true);
@@ -50,6 +48,7 @@ export default function Accueil() {
             console.error("Erreur lors de la récupération des données des voitures :", error);
         }
     }
+
 
     const getCarsCategory = (brand) => {
         db.withTransactionSync(() => {
@@ -118,7 +117,7 @@ export default function Accueil() {
         setLoading(false);
     }, [recherche.car]);
 
-
+//style={[styles.text, { textDecorationLine: 'underline' }]}
 
     return (
         <LinearGradient style={styles.container}
@@ -221,7 +220,7 @@ export default function Accueil() {
 
                                 </View>
 
-                                <Pressable style={mix ? { marginVertical: 10, position: 'absolute', top: 10 } : { marginVertical: 10, position: 'absolute', bottom: 10 }} onPress={() => {
+                                <Pressable style={[ mix ? {marginVertical: 10, position: 'absolute', top: 10,left:10 } : { marginVertical: 10, position: 'absolute', bottom: 10,left:5 }]} onPress={() => {
                                     toogleLike(item.id, setLikeIds);
                                 }}>
                                     {likeIds.has(item.id) ? (<AntDesign name={'heart'} size={27} color="#B22222" />) : (<AntDesign name={'heart'} size={27} color="#ffffffff" />)}
@@ -338,6 +337,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         flexWrap: 'wrap',
         backgroundColor: 'rgba(111, 7, 7, 0.2)',
+        justifyContent: 'center',
         shadowColor: 'black',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 2,
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     imgCar: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: width * 0.30,
+        height: height * 0.15,
     },
     imgCar2: {
         justifyContent: 'center',

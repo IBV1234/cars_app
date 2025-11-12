@@ -7,7 +7,8 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import { StyleSheet, Text, View, Image, Dimensions, TextInput, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { updateUserProfile, getDate, editProfilPicture } from '../../fonctions/fonctions';
-import { UserContex, RememberMeContext } from './connection';
+import { RememberMeContext } from './connection';
+import { useUser } from '@/context/userContext';
 import { Buttons } from '@/components/custom/custom';
 
 
@@ -15,7 +16,7 @@ const { height, width } = Dimensions.get('window');
 
 export default function Profile() {
 
-    const { user, setUser } = useContext(UserContex);
+    const { user, setUser } = useUser();
     const { isSelected, setSelection } = useContext(RememberMeContext);
     const [UpdatePersonne, setUpdatePersonne] = useState({ password: '', picture: '', email: user.email, passwordConfirm: '', isEditing: false });
     const [canSeePswd, setCanSeePswd] = useState(true);

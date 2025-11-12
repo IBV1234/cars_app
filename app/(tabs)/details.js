@@ -14,9 +14,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { Collapsible } from '@/components/Collapsible';
 import { Buttons } from '@/components/custom/custom';
 
-import { UserContex } from './connection';
+// import { UserContex } from './connection';
 import { LikeContext } from './acceuil';
-
 import { toogleLike, addLink, formatNumberWithThousandsSeparator } from '@/fonctions/fonctions';
 import { carsLocation } from "@/constants/carsPositions";
 
@@ -31,26 +30,18 @@ export default function Details() {
     const { item } = useLocalSearchParams();
     const car = item ? JSON.parse(item) : null;
 
-    const { user, setUser } = useContext(UserContex);
     const { likeIds, setLikeIds } = useContext(LikeContext)
     const [loading, setLoading] = useState(true);
     const [cars, setCars] = useState(carsLocation);
     
 
-    
-    useEffect(() => {
-    }, [item]);
-
-      useEffect(() => {
-        console.log('Car data:', car);  
-    }, [car]);
     const func =()=>{
         console.log('ok');
 
         return null;
     }
     
-    
+
     return (
         <LinearGradient style={styles.container}
             colors={['rgba(27, 26, 26, 0.8)', 'rgba(255, 247, 247, 0.5)']} // Rouge en haut, noir en bas
