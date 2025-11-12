@@ -95,9 +95,7 @@ export const AnimatadeBoutton = ({ text, fonction }) => {
         transform: [{ scale: scale.value }],
     }));
     return (
-        <Animated.View style={animatedStyle}
-            animation="bounceIn"
-            duration={1000}>
+        <Animated.View style={animatedStyle}>
             <Pressable
                 onPressIn={() => { scale.value = withSpring(0.9); }}
                 onPressOut={() => {
