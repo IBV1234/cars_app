@@ -89,26 +89,28 @@ export const AffciherImage = ({ item, styles, mix, loading, setLoading }) => {
     )
 }
 
-export const AnimatadeBoutton = ({ text, fonction }) => {
+export const AnimatadeBoutton = ({ text, fonction,style }) => {
     const scale = useSharedValue(1);
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [{ scale: scale.value }],
     }));
     return (
-        <Animated.View style={animatedStyle}>
+        <Animated.View style={ animatedStyle }>
             <Pressable
                 onPressIn={() => { scale.value = withSpring(0.9); }}
                 onPressOut={() => {
                     scale.value = withSpring(1); // withSpring(1, { damping: 10, stiffness: 200 }stiffness pour un retour plus rapide damping pour réduire les sauts
                     ; fonction();
                 }}
-                style={[styles.boutton, { backgroundColor: 'rgba(218, 5, 5, 0.8)', alignSelf: 'center' }]}
+                style={ style ? style: [styles.boutton, { backgroundColor: 'rgba(218, 5, 5, 0.8)', alignSelf: 'center' }]}
             >
-                <Text style={{ color: 'white', fontSize: 15 }}>{text}</Text>
+                <Text style={{ color: 'white', fontSize: 15 ,alignSelf:'center' }}>{text}</Text>
             </Pressable>
         </Animated.View>
     )
 }
+
+
 
 const styles = StyleSheet.create({
     boutton: {

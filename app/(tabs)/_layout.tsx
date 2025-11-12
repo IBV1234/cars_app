@@ -56,6 +56,11 @@ export default function TabLayout() {
         options={{href:null}} 
         />
 
+            <Tabs.Screen
+        name="games"
+        options={{href:null}} 
+        />
+
               {/* <Tabs.Screen
         name="acceuil"
         options={{href:null}} 
