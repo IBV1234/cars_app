@@ -51,9 +51,6 @@ export default function MarkePlace() {
     return (
         <View style={styles.containerConnexion}>
 
-
-
-
             <View style={styles.containerProfileHeader}>
                 <View>
                     <LinearGradient style={[styles.ContainerArrow, { left: -150, top: 15 }]}

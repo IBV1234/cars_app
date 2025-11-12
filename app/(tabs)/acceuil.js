@@ -24,7 +24,7 @@ export default function Accueil() {
 
     const [carsLogoData, setCarsLogoData] = useState([]);
     const [carsData, setCarsData] = useState([]);
-    const { user, setUser } = useContext(UserContex);
+    const { user } = useContext(UserContex);
     const { likeIds, setLikeIds } = useContext(LikeContext);
     // const [likeIds, setLikeIds] = useState(new Set);// set est un  tableau like avec les ids  et  qui stocke des éléments uniques.
     const [loading, setLoading] = useState(true);
@@ -98,7 +98,7 @@ export default function Accueil() {
 
     useEffect(() => {
 
-        //deleteCarsByYear(2025);
+        //deleteCarsByYear(2020);
         //getInfoUsers();
         setCarsLogoData(addLink(carsLogo));
     }, [])
@@ -224,7 +224,7 @@ export default function Accueil() {
                                 <Pressable style={mix ? { marginVertical: 10, position: 'absolute', top: 10 } : { marginVertical: 10, position: 'absolute', bottom: 10 }} onPress={() => {
                                     toogleLike(item.id, setLikeIds);
                                 }}>
-                                    {likeIds.has(item.id) ? (<AntDesign name={'heart'} size={27} color="#B22222" />) : (<AntDesign name={'hearto'} size={27} color="#B22222" />)}
+                                    {likeIds.has(item.id) ? (<AntDesign name={'heart'} size={27} color="#B22222" />) : (<AntDesign name={'heart'} size={27} color="#ffffffff" />)}
                                 </Pressable>
 
                                 {/* <View style={{ marginVertical: 10,marginLeft:6, position: 'absolute', top: 5 } }>

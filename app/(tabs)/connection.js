@@ -1,15 +1,15 @@
 
-import React, { useState, createContext, useContext, useCallback, useEffect } from 'react';
-import { useRouter, Link } from 'expo-router';
+import { Buttons } from '@/components/custom/custom';
+import { getUserInBd } from '@/fonctions/fonctions';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import Zocial from '@expo/vector-icons/Zocial';
-import { StyleSheet, Text, View, Dimensions, Pressable, TextInput } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import Checkbox from 'expo-checkbox';
 import { LinearGradient } from 'expo-linear-gradient';
-import { insertUserViaApiIntoDB, GetUserInBd, saveSession, getSession } from '@/fonctions/fonctions';
-import { Buttons } from '@/components/custom/custom';
-import { useFocusEffect } from '@react-navigation/native';
+import { Link, useRouter } from 'expo-router';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { Dimensions, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 
 const { height, width } = Dimensions.get('window');
@@ -78,7 +78,7 @@ export default function Connexion() {
     const valideUser = () => {
         if (personne.email.trim() && personne.password.trim()) {
             if (personne.password.trim()) {
-                const user = GetUserInBd(personne.email, personne.password);
+                const user = getUserInBd(personne.email, personne.password);
                 if (user !== false) {
                     setUser(user);
                     // const session = {

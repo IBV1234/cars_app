@@ -53,10 +53,10 @@ export const AffciherImage = ({ item, styles, mix, loading, setLoading }) => {
     if (item.lien) images.push(item.lien);
     if (item.image) images.push(item.image);
     if (item.image2) images.push(item.image2);
-    images = images.filter((value,index,self)=> self.indexOf(value)===index) // self: le tableau cu complet self.indexOf(value): l'index de value dans self || retire les doublons
-
+    images = images.filter((value,index,self)=> self.indexOf(value)===index) // self: le tableau au complet self.indexOf(value): l'index de value dans self || retire les doublons
+//style={mix ? styles.imgCar2 : styles.imgCar}
     return (
-        <Pressable style={mix ? styles.imgCar2 : styles.imgCar}
+        <Pressable className=''
             onPress={() => {
                 router.push(
                     {

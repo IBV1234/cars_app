@@ -41,7 +41,9 @@ export default function Details() {
     useEffect(() => {
     }, [item]);
 
-  
+      useEffect(() => {
+        console.log('Car data:', car);  
+    }, [car]);
     const func =()=>{
         console.log('ok');
 
@@ -81,7 +83,7 @@ export default function Details() {
                      onPress={() => {
                         toogleLike(car.id, setLikeIds);
                     }}>
-                        {likeIds.has(car.id) ? (<AntDesign name={'heart'} size={27} color="#B22222" />) : (<AntDesign name={'hearto'} size={27} color="#B22222" />)}
+                        {likeIds.has(car.id) ? (<AntDesign name={'heart'} size={27} color="#B22222" />) : (<AntDesign name={'heart'} size={27} color="#ffffffff" />)}
                     </Pressable>
                 </View>
 
@@ -92,7 +94,7 @@ export default function Details() {
 
 
                 <View style={{ alignSelf: 'center', gap: 10 }}>
-                    <Image source={car.lien} style={styles.containerImage} />
+                    <Image source={car.image} style={styles.containerImage} />
                     <Text style={{ alignSelf: 'center', fontSize: 20, color: 'gold' }}>{formatNumberWithThousandsSeparator(car.price)} $</Text>
                 </View>
 

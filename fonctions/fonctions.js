@@ -1,16 +1,14 @@
 import { db } from "@/app/(tabs)/index";
-import { Image, PermissionsAndroid } from 'react-native';
-import moment from 'moment-timezone';
-import * as Keychain from 'react-native-keychain';
 import { images } from "@/constants/carsLogo";
 import * as Location from 'expo-location';
+import moment from 'moment-timezone';
+import { Alert, Image } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { Alert } from 'react-native';
-import { carsLocation } from "@/constants/carsPositions";
+import * as Keychain from 'react-native-keychain';
+
 
 
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from "react";
 
 export const validerEmail = (email) => {
     const trimmed = email.trim();
@@ -122,7 +120,7 @@ export const handleEditCar = async (car, setCar) => {
                 onPress: async () => {
                     try {
                         const result = await editCarPic(car, setCar);
-                        console.log(result);
+                        // console.log(result);
                     } catch (error) {
                         console.error(error);
                     }
@@ -134,7 +132,7 @@ export const handleEditCar = async (car, setCar) => {
 };
 
 export const getIdUserByName = (name) => {
-  if(name!==''){
+  if(name.trim()!==''){
       try {
         const UserInBd = db.getAllSync(
             'SELECT id FROM User WHERE name = ?',
@@ -164,7 +162,7 @@ export const insertCarsData = (car) => {
                     car.name ?? '',
                     car.brand ?? '',
                     parseInt(car.year) || 2025,
-                    String(car.lien ?? ''),
+                    String(car.lien ?? ''),// ajout de String() pour convertir en chaîne de caractères et mieux gerer les erreurs de null ou undefined
                     parseInt(car.hp) || 0,
                     parseInt(car.seats) || 0,
                     parseInt(car.price) || 0,
@@ -211,7 +209,7 @@ export const updateUserProfile = (user) => {
 
 
 }
-export const GetUserInBd = (email, mdp) => {
+export const getUserInBd = (email, mdp) => {
     try {
         const UserInBd = db.getAllSync(
             'SELECT * FROM User WHERE email = ? AND password = ?',
@@ -278,7 +276,7 @@ export const getSession = async () => {
     return null;
 }
 
-export const BoolValideUserViaApi = (user) => {
+export const boolValideUserViaApi = (user) => {
     const existingUser = db.getFirstSync(
         `SELECT * FROM User WHERE google_id = ?`,
         [user.id]
