@@ -29,21 +29,10 @@ export const AnimatadeGameBoutton = ({ text, fonction, style }) => {
         transform: [{ scale: scale.value }],
     }));
 
-    const handlePressIn = () => {
-        scale.value = withSpring(0.9, { damping: 8, stiffness: 300 });
-    };
-
-    const handlePressOut = () => {
-        scale.value = withSpring(1, { damping: 8, stiffness: 300 });
-        
-        fonction();
-    };
-
     return (
         <Animated.View style={animatedStyle}>
             <Pressable
-                onPressIn={handlePressIn}
-                onPressOut={handlePressOut}
+                onPress={()=>{fonction()}}
                 style={style ? style : [styles.boutton, { backgroundColor: 'rgba(218, 5, 5, 0.8)', alignSelf: 'center' }]}
             >
                 <Text style={styles.text}>{text}</Text>

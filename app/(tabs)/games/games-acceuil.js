@@ -12,9 +12,6 @@ const { height, width } = Dimensions.get('window');
 
 export default function GamesPage() {
     const router = useRouter();
-    useEffect(() => {
-        console.log("Games page mounted");
-    }, []);
 
     const goToGame = () => {
         router.push('/games/car-quiz');
@@ -56,7 +53,7 @@ export default function GamesPage() {
 
 
                 <View style={styles.gameButtonContainer}>
-                    <AnimatadeGameBoutton text={'Jouez'} style={styles.learnMoreButton} function={goToGame} />
+                    <AnimatadeGameBoutton text={'Jouez'} style={styles.learnMoreButton} fonction={goToGame} />
                 </View>
 
             </View>
