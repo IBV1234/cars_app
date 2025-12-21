@@ -1,29 +1,68 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, Link, useFocusEffect } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Dimensions, Image, TextInput, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Button,Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { } from '../../../fonctions/fonctions';
-// import { Buttons, AnimatadeGameBoutton } from '@/components/custom/custom';
 import { AnimatadeGameBoutton } from '../../../components/animatedGameBtn';
-// import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
-import * as Animatable from 'react-native-animatable';
+import Animated, { useSharedValue, withSpring, useAnimatedStyle, withTiming, Easing, withRepeat } from 'react-native-reanimated';
+import { transform } from 'typescript';
 const { height, width } = Dimensions.get('window');
 
 export default function GamesPage() {
     const router = useRouter();
+    const DURATION = 1500;
+    console.log("witdth",width)
+
+    const startX = 100;   // position à droite
+    const left = -106.5;    // position à gauche
+    
+    
+    console.log("endx:",left,"startx:",startX)
+    const inOutAnim = useSharedValue(startX);
+
+
+
+    const animatedStyles = useAnimatedStyle(() => ({
+        transform: [{ translateX: inOutAnim.value }],
+    }));
+
+    useEffect(() => {
+        inOutAnim.value = withRepeat(
+            withTiming(left, {
+                duration: DURATION,
+                //easing:Easing.inOut(Easing.quad) //commence l’animation lentement, puis accélérer un peu et ralentir à nouveau vers la fin.
+            }),
+            -1, // -1 = répéter à l'infinie /1 = une fois / 2 = deux fois
+            true // true =indique si l’animation doit revenir en arrière après chaque répétition/ false = joue l’animation puis recommence depuis le début
+        )
+    }, [])
+
 
     const goToGame = () => {
         router.push('/games/car-quiz');
     }
 
+
     return (
         <LinearGradient
             style={styles.container}
-            colors={['#FF0000', '#0000FF', '#000000']}
+            colors={['#E0E0E0', '#7A7A7A', '#000000']}
             start={{ x: 1, y: 0 }}
             end={{ x: 0, y: 1 }}
-            locations={[0, 0.5, 1]} >
+            locations={[0, 0.5, 1]}                    
+             >
+
+            <View style={{ alignSelf: 'center', position: 'relative', }}>
+                <Animated.View style={ [animatedStyles,{  position: 'absolute',top: width *0.25}]}>
+
+                    <Image source={ require("./gifs/animation-car.gif")} style={{
+                        width: 200,
+                        height: 100,
+                    }} resizeMode="cover" />
+                </Animated.View>
+
+            </View>
 
             {/* Contenu principal avec effet see-through */}
             <View style={styles.container}>
