@@ -52,11 +52,11 @@ export default function MotorAnimation({ height, left, widthImage, heightImage, 
                     duration: 1000,
                     easing: Easing.linear ,
                    
-                },(finished) =>{
-                    if(finished){
-                        reposiTionsAnim();
-                    }
-                }
+                },//(finished) =>{
+                //     if(finished){
+                //         reposiTionsAnim();
+                //     }
+                // }
             )
 
         }
