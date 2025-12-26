@@ -142,6 +142,27 @@ export const handleEditCar = async (car, setCar) => {
     );
 };
 
+
+export const customAlert =(title,message,onOkPress=()=>{})=>{
+    Alert.alert(
+        title,
+        message,
+        [
+            {
+                text: "Annuler",
+                style: "cancel"
+            },
+            {
+                text: "OK",
+                onPress:  async ()=>{
+                    onOkPress();
+                }
+            }
+        ],
+        { cancelable: true }
+    );
+
+}
 export const getIdUserByName = (name) => {
   if(name.trim()!==''){
       try {
@@ -310,27 +331,51 @@ export const toogleLike = (id, setLikeIds) => {
     })
 }
 
-
+let currentSound = null;
 export async  function playSound (link){
+
+    if(currentSound){
+        const status = await currentSound.getStatusAsync();
+        if(status.isPlaying){
+            console.log("is already playing")
+            return;
+        }
+                
+
+
+    }
     const soundLink = addLinkForSounds(link,engineSounds);
     if(!soundLink)
         return;
     const {sound} = await Audio.Sound.createAsync(soundLink);
-    sound.setOnPlaybackStatusUpdate((status)=>{ // comme un event listener qui retourn l'état du son
-        if(status.didJustFinish)// regarde si le son est terminé et libère la mémoire éviter les ralentissements
-            sound.unloadAsync();
+    currentSound = sound;
+    // console.log("currentSound #2",currentSound)
+        sound.setOnPlaybackStatusUpdate((status)=>{ // comme un event listener qui retourn l'état du son
+        if(status.didJustFinish){// regarde si le son est terminé et libère la mémoire éviter les ralentissements
+             sound.unloadAsync();
+            currentSound = null;
+        }
+     
     })
     await sound.playAsync();
+    }
 
-}
 
-export async  function stopSound (link){
+
+export async  function releaseSound (link){
         const soundLink = addLinkForSounds(link,engineSounds);
     if(!soundLink)
         return;
     const {sound} = await Audio.Sound.createAsync(soundLink);
     sound.stopAsync();
     sound.unloadAsync();
+}
+export async  function stopSound (link){
+        const soundLink = addLinkForSounds(link,engineSounds);
+    if(!soundLink)
+        return;
+    const {sound} = await Audio.Sound.createAsync(soundLink);
+    sound.stopAsync();
 }
 // export const permissionToLocation = async () => {
 //     try {

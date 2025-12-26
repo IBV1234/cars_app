@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, Link, useFocusEffect } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Dimensions,Image ,ImageBackground} from 'react-native';
+import { StyleSheet, Text, View, Dimensions,ImageBackground} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { } from '../../../fonctions/utils';
 import { AnimatadeGameBoutton } from '../../../components/animatedGameBtn';

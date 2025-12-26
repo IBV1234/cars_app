@@ -116,52 +116,52 @@ export const carQuestions = [
 
 export const motorQuestions = [
     {
-        link:"../app/(tabs)/games/images/hellcat_motot.png",
+        link: "../app/(tabs)/games/images/hellcat_motot.png",
         responses: [
-          {
-              userResponse:"V8",
+            {
+                userResponse: "V8",
                 isCorrect: true
-          },
-          {
-            userResponse:"V6",
-            isCorrect: false
-          },
-          {
-            userResponse:"V10",
-            isCorrect: false
-          },
-          {
-            userResponse:"V12",
-            isCorrect: false
-          },
-          {
-            userResponse:"Inline 6",
-            isCorrect: false
-          }
+            },
+            {
+                userResponse: "V6",
+                isCorrect: false
+            },
+            {
+                userResponse: "V10",
+                isCorrect: false
+            },
+            {
+                userResponse: "V12",
+                isCorrect: false
+            },
+            {
+                userResponse: "Inline 6",
+                isCorrect: false
+            }
 
         ]
-        
+
     },
     {
         responses: [
             {
-                userResponse:"V8",
+                userResponse: "V8",
                 isCorrect: false
             },
             {
-                userResponse:"V6",
+                userResponse: "V6",
                 isCorrect: true
             },
             {
-                userResponse:"V10",
+                userResponse: "V10",
                 isCorrect: false
             },
             {
-                userResponse:"V12",
+                userResponse: "V12",
                 isCorrect: false
             },
             {
-                userResponse:"Inline 6",
+                userResponse: "Inline 6",
                 isCorrect: false
             }
         ]
@@ -169,48 +169,48 @@ export const motorQuestions = [
     {
         responses: [
             {
-                userResponse:"V8",
+                userResponse: "V8",
                 isCorrect: false
             },
             {
-                userResponse:"V6",
+                userResponse: "V6",
                 isCorrect: false
             },
             {
-                userResponse:"V10",
+                userResponse: "V10",
                 isCorrect: true
             },
             {
-                userResponse:"V12",
+                userResponse: "V12",
                 isCorrect: false
             },
             {
-                userResponse:"Inline 6",
+                userResponse: "Inline 6",
                 isCorrect: false
             }
         ]
     },
     {
-        responses:  [
+        responses: [
             {
-                userResponse:"V8",
+                userResponse: "V8",
                 isCorrect: false
             },
             {
-                userResponse:"V6",
+                userResponse: "V6",
                 isCorrect: false
 
             },
             {
-                userResponse:"V10",
+                userResponse: "V10",
                 isCorrect: false
             },
             {
-                userResponse:"V12",
+                userResponse: "V12",
                 isCorrect: true
             },
             {
-                userResponse:"Inline 6",
+                userResponse: "Inline 6",
                 isCorrect: false
             }
 
@@ -219,35 +219,58 @@ export const motorQuestions = [
     {
         responses: [
             {
-                userResponse:"V8",
+                userResponse: "V8",
                 isCorrect: false
             },
             {
-                userResponse:"V6",
+                userResponse: "V6",
                 isCorrect: false
             },
             {
-                userResponse:"V10",
+                userResponse: "V10",
                 isCorrect: false
             },
             {
-                userResponse:"V12",
+                userResponse: "V12",
                 isCorrect: false
             },
             {
-                userResponse:"Inline 6",
+                userResponse: "Inline 6",
                 isCorrect: true
             }
         ]
     }
 ]
 
-export const engineSounds ={
+export const engineSounds = {
     v8: require("../app/(tabs)/games/mp3/v8.mp3"),
     v6: require("../app/(tabs)/games/mp3/v6.mp3"),
-    v10:require("../app/(tabs)/games/mp3/v10.mp3"),
-    v12:require("../app/(tabs)/games/mp3/v12.mp3"),
-    inline6:require("../app/(tabs)/games/mp3/inline6.mp3"),
-    cheering:require("../app/(tabs)/games/mp3/cheering.mp3")
+    v10: require("../app/(tabs)/games/mp3/v10.mp3"),
+    v12: require("../app/(tabs)/games/mp3/v12.mp3"),
+    inline6: require("../app/(tabs)/games/mp3/inline6.mp3"),
+    cheering: require("../app/(tabs)/games/mp3/cheering.mp3")
 
 }
+
+export const rostComments = [
+    {
+        1: [
+            {
+                messsage: "Veuillez réessayer encore 🤷‍♂️"
+
+            }
+        ],
+         2: [
+            {
+                messsage: "Êtes-tu sure de connaitre les moteurs 🫢"
+
+            }
+        ],
+         3: [
+            {
+                messsage: "Mon bros, peut-être qu'il faut laisser tomber 😞 "
+
+            }
+        ]
+    },
+]

@@ -1,41 +1,72 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Dimensions, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import MotorAnimation from '../../../components/motoAnimation';
-import {playSound,stopSound,iphoneVibration} from '@/fonctions/utils';
-import { motorQuestions } from '@/constants/carQuestions';
+import { playSound, releaseSound, iphoneVibration, customAlert, stopSound } from '@/fonctions/utils';
+import { motorQuestions,rostComments } from '@/constants/carQuestions';
 const { height, width } = Dimensions.get('window')
 
 export default function CarQuizPage() {
-    const [startRotation, setStartRotation] = useState(false);
+    const [stateMotoAnimation, setStateMotorAnimation] = useState({startRotation:false,finishAnimation:false});
     const [index, setIndex] = useState(0);
     const [items, setItems] = useState([]);
     const [response, setResponse] = useState({ isCorrect: undefined, index: undefined });
     const [imagesLink, setImagesLink] = useState([]);
+    const [badAttemps, setBadAttemps] =useState(1);
+    const timer = useRef(null);
+    const [colors, setColors] = useState(['#E0E0E0', '#7A7A7A', '#000000']);
 
 
 
-    const handleShakingMoto =  async() => {
 
-        setStartRotation((prev) => prev ? false : true);
-         await playSound('v8');
-        setTimeout( async () => {
-            setStartRotation(false);
-            await stopSound();
+    const handleShakingMoto = async () => {
+        if (timer.current) {
+            console.log("timeout ps encore finit", timer.current)
+            return;
+        }
+
+        setStateMotorAnimation({ startRotation: true, finishAnimation: false });
+        await playSound('v8');
+        timer.current = setTimeout(async () => {
+            await releaseSound('v8');
+            timer.current = null;
+            console.log("fin du timeout");
+            setStateMotorAnimation({ startRotation: false,finishAnimation:false});
         }, 6010);
 
 
+
     }
+
+    const confirmAnswer = async () => {
+        setTimeout(()=>{
+        setStateMotorAnimation({ startRotation: false, finishAnimation: true });
+        },2000);
+
+    }
+        
     const handleResponse = async (isCorrect, index) => {
-        setStartRotation(false);
+        if(timer.current){
+            alert("Attendez que le song soit terminé avant de répondre!")
+           return;
+        }
+
         if (isCorrect) {
             setResponse({ isCorrect: isCorrect, index: index });
             await playSound('cheering');
             iphoneVibration();
+             customAlert("Vous avez gagné", "Êtes-vous prête aux prochaines questions ?",confirmAnswer)
             // setIndex((prevIndex) => (prevIndex + 1));
         } else {
+            const message = rostComments[0][badAttemps][0].messsage;
             setResponse({ isCorrect: false, index: index })
+             message && message.length>0 &&  customAlert("Mauvais réponse", message);
+            setBadAttemps((prev)=> {
+                if(prev<=3)
+                    return prev +1;
+                return prev = 0;
+            });
         }
 
     }
@@ -47,15 +78,12 @@ export default function CarQuizPage() {
         setImagesLink(images);
     }, [])
 
-    useEffect(() => {
-    }, [startRotation])
-
 
     return (
 
         <LinearGradient
             style={styles.container}
-            colors={['#E0E0E0', '#7A7A7A', '#000000']}
+            colors={colors}
             start={{ x: 1, y: 0 }}
             end={{ x: 0, y: 1 }}
             locations={[0, 0.5, 1]}
@@ -67,7 +95,7 @@ export default function CarQuizPage() {
                 </Text>
             </View>
             <Pressable onPress={() => handleShakingMoto()}>
-                <MotorAnimation height={height * -0.01} left={width * -0.22} widthImage={200} heightImage={200} startRotation={startRotation} />
+                <MotorAnimation height={height * -0.01} left={width * -0.22} widthImage={200} heightImage={200} startRotation={stateMotoAnimation.startRotation} finishAnimation={stateMotoAnimation.finishAnimation}/>
             </Pressable>
 
             <View style={styles.ImageMotors}>
