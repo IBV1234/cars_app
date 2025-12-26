@@ -6,7 +6,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { StyleSheet, Text, View, Image, Dimensions, TextInput, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { updateUserProfile, getDate, editProfilPicture } from '../../fonctions/fonctions';
+import { updateUserProfile, getDate, editProfilPicture } from '../../fonctions/utils';
 import { RememberMeContext } from './connection';
 import { useUser } from '@/context/userContext';
 import { Buttons } from '@/components/custom/custom';

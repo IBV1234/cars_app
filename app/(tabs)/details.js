@@ -16,7 +16,7 @@ import { Buttons } from '@/components/custom/custom';
 
 // import { UserContex } from './connection';
 import { LikeContext } from './acceuil';
-import { toogleLike, addLink, formatNumberWithThousandsSeparator } from '@/fonctions/fonctions';
+import { toogleLike, addLink, formatNumberWithThousandsSeparator } from '@/fonctions/utils';
 import { carsLocation } from "@/constants/carsPositions";
 
 import * as Localization from "expo-localization";

@@ -7,7 +7,7 @@ import { carsLocation } from "@/constants/carsPositions";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet, Text, View, Image, Dimensions, Pressable, ScrollView, } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { getLocation } from '../../fonctions/fonctions';
+import { getLocation } from '../../fonctions/utils';
 import { useUser } from '@/context/userContext';
 import { Buttons } from '@/components/custom/custom';
 import MapView, { Marker } from 'react-native-maps';

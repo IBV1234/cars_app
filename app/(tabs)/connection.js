@@ -1,6 +1,6 @@
 
 import { Buttons } from '@/components/custom/custom';
-import { getUserInBd } from '@/fonctions/fonctions';
+import { getUserInBd } from '@/fonctions/utils';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import Zocial from '@expo/vector-icons/Zocial';

@@ -1,18 +1,15 @@
-import React, { useContext, useState, useEffect, createContext, useCallback ,useMemo} from "react";
-import { Link, router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, Text, View, Dimensions, Pressable, Image, FlatList, TextInput } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import EvilIcons from '@expo/vector-icons/EvilIcons';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { carsLogo } from "@/constants/carsLogo";
 import { useUser } from "@/context/userContext";
-import { formatNumberWithThousandsSeparator, toogleLike, addLink } from '@/fonctions/fonctions';
-import { AffciherImage } from '@/components/custom/custom';
-import * as Localization from "expo-localization";
-import { I18n } from "i18n-js";
+import { addLink, formatNumberWithThousandsSeparator, toogleLike } from '@/fonctions/utils';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { LinearGradient } from 'expo-linear-gradient';
+import { Link, router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { Dimensions, FlatList, Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { db } from "./index";
-
+import { ShowCars } from "@/components/custom/custom";
 
 const { height, width } = Dimensions.get("window");
 export const LikeContext = createContext();
@@ -213,7 +210,7 @@ export default function Accueil() {
 
                                 <View>
 
-                                    <AffciherImage item={item} styles={styles} mix={mix} loading={loading} setLoading={setLoading} />
+                                    <ShowCars item={item} styles={styles} mix={mix} loading={loading} setLoading={setLoading} />
                                     <Text style={mix ? [styles.textCar, { color: '#B8860B', fontSize: 16 }] : [styles.textCar, { color: '#B8860B' }]}>{item.name}</Text>
                                     <Text style={mix ? [styles.textCar, { color: 'green', fontSize: 16 }] : [styles.textCar, { color: 'green' }]}> {formatNumberWithThousandsSeparator(item.price)}$</Text>
                                     <Text style={mix ? [styles.textCar, { color: 'white', fontSize: 16 }] : [styles.textCar, { color: 'white' }]}> Année: {item.year}</Text>

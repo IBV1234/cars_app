@@ -8,7 +8,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
@@ -29,54 +29,59 @@ export default function TabLayout() {
       }}>
       <Tabs.Screen
         name="index"
-   options={{
+        options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="connection"
-        options={{href:null}} 
-        />
+        options={{ href: null }}
+      />
 
       <Tabs.Screen
         name="markePlace"
         options={{
           title: 'market Place',
-          tabBarIcon: ({ color }) =><AntDesign name="car" size={24} color="black" /> ,
+          tabBarIcon: ({ color }) => <AntDesign name="car" size={24} color={color} />,
         }}
-        />
-           <Tabs.Screen
+      />
+      <Tabs.Screen
         name="inscription"
-        options={{href:null}} 
-        />
+        options={{ href: null }}
+      />
 
-            <Tabs.Screen
+      <Tabs.Screen
         name="profile"
-        options={{href:null}} 
-        />
+        options={{ href: null }}
+      />
 
-            <Tabs.Screen
-        name="games"
-        options={{href:null}} 
-        />
+      <Tabs.Screen
+        name="games/games-acceuil"
+        options={{
+          title: 'Games page',
+          tabBarIcon: ({ color }) => <MaterialIcons name="games" size={24} color={color} />,
+        }}
+      />
 
-              {/* <Tabs.Screen
+      {/* <Tabs.Screen
         name="acceuil"
         options={{href:null}} 
         /> */}
 
-        <Tabs.Screen
+      <Tabs.Screen
         name="carsMap"
-          options={{href:null}} 
+        options={{ href: null }}
 
       />
 
-       <Tabs.Screen
+      <Tabs.Screen
         name="details"
-          options={{href:null}} 
+        options={{ href: null }}
 
       />
+
+
     </Tabs>
   );
 }

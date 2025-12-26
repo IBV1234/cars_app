@@ -1,17 +1,96 @@
 
-import { useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, Image, TextInput, ScrollView, Pressable } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Dimensions, Pressable } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import MotorAnimation from '../../../components/motoAnimation';
+import {playSound,stopSound,iphoneVibration} from '@/fonctions/utils';
+import { motorQuestions } from '@/constants/carQuestions';
+const { height, width } = Dimensions.get('window')
 
-const {height,width} = Dimensions.get('window')
 export default function CarQuizPage() {
+    const [startRotation, setStartRotation] = useState(false);
+    const [index, setIndex] = useState(0);
+    const [items, setItems] = useState([]);
+    const [response, setResponse] = useState({ isCorrect: undefined, index: undefined });
+    const [imagesLink, setImagesLink] = useState([]);
+
+
+
+    const handleShakingMoto =  async() => {
+
+        setStartRotation((prev) => prev ? false : true);
+         await playSound('v8');
+        setTimeout( async () => {
+            setStartRotation(false);
+            await stopSound();
+        }, 6010);
+
+
+    }
+    const handleResponse = async (isCorrect, index) => {
+        setStartRotation(false);
+        if (isCorrect) {
+            setResponse({ isCorrect: isCorrect, index: index });
+            await playSound('cheering');
+            iphoneVibration();
+            // setIndex((prevIndex) => (prevIndex + 1));
+        } else {
+            setResponse({ isCorrect: false, index: index })
+        }
+
+    }
+    useEffect(() => {
+        setItems(motorQuestions);
+
+        const images = motorQuestions.map(items => items.link);
+
+        setImagesLink(images);
+    }, [])
+
+    useEffect(() => {
+    }, [startRotation])
+
 
     return (
-        <View style={styles.container}>
-            <View style={styles.glassSection}>
-                <Text style={{ color: 'white' }}> Allo</Text>
+
+        <LinearGradient
+            style={styles.container}
+            colors={['#E0E0E0', '#7A7A7A', '#000000']}
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            locations={[0, 0.5, 1]}
+        >
+            <View>
+                <Text style={styles.title}>
+                    Quel type de moteur  vient de se son?
+                    cliquez sur le moteur pour savoir 👀
+                </Text>
+            </View>
+            <Pressable onPress={() => handleShakingMoto()}>
+                <MotorAnimation height={height * -0.01} left={width * -0.22} widthImage={200} heightImage={200} startRotation={startRotation} />
+            </Pressable>
+
+            <View style={styles.ImageMotors}>
+
+
+                {
+                    items.length > 0 && items[index] && (items[index].responses.map((question, index) => (
+                        <Pressable key={index} style={[styles.navRow,
+                        response.index === index && {
+                            backgroundColor: response.isCorrect === true ? 'green' : 'red'
+                        }]}
+                            onPress={() => handleResponse(question.isCorrect, index)}>
+                            <Text style={styles.text}>{question.userResponse}</Text>
+                        </Pressable>
+
+                    ))
+                    )
+                }
+
 
             </View>
-        </View>
+
+        </LinearGradient>
     )
 }
 
@@ -20,13 +99,17 @@ export default function CarQuizPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
+        alignContent: 'center',
+        flexDirection: 'column',
     },
 
-    glassSection: {
-        
-        height:70,
-        alignItems:'center',
-        marginTop:height *0.10,
+    ImageMotors: {
+        marginTop: height * 0.20,
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: 'auto',
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
         marginHorizontal: 20,
         marginVertical: 10,
@@ -37,71 +120,32 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(255, 255, 255, 0.2)',
     },
     title: {
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: 'bold',
-        color: 'white',
+        color: 'black',
         textAlign: 'center',
-        marginBottom: 15,
     },
     navRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
+        borderWidth: 2,
+        borderRadius: 30,
+        width: '100%',
+        height: 50,
+        alignContent: 'center',
+        justifyContent: 'center',
+        marginVertical: 10,
+        borderColor: 'rgba(255, 255, 255, 0.3)',
     },
     navItem: {
         fontSize: 16,
         color: 'white',
         fontWeight: '600',
     },
-    separator: {
-        height: 1,
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-        marginHorizontal: 20,
-        marginVertical: 5,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'white',
-        marginBottom: 10,
-    },
 
-    storyContainer: {
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
-        marginHorizontal: 20,
-        marginVertical: 10,
-        padding: 20,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.3)',
-    },
-    storyTitle: {
-        fontSize: 24,
+    text: {
+        fontSize: 16,
         fontWeight: 'bold',
-        color: 'white',
+        color: 'black',
+        textAlign: 'center',
         marginBottom: 10,
-    },
-    storyDescription: {
-        fontSize: 14,
-        color: 'white',
-        lineHeight: 20,
-        marginBottom: 15,
-    },
-    learnMoreContainer: {
-        alignItems: 'center',
-        marginVertical: 20,
-    },
-    learnMoreButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        paddingHorizontal: 30,
-        paddingVertical: 12,
-        borderWidth: 1,
-        alignSelf: 'center',
-        width: 150,
-        borderRadius: 25,
-        borderColor: 'rgba(255, 255, 255, 0.3)',
-    },
-
-    gameButtonContainer: {
-        marginTop: 20,
     },
 });

@@ -4,7 +4,7 @@ import { useRouter, Link, useFocusEffect } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { StyleSheet, Text, View, Dimensions, Image, TextInput, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { insertCarsData, dropDownComponent, handleEditCar } from '../../fonctions/fonctions';
+import { insertCarsData, dropDownComponent, handleEditCar } from '../../fonctions/utils';
 import { Buttons,AnimatadeBoutton } from '@/components/custom/custom';
 import { dataLogo, dataCarTypes } from '../../constants/carsLogo';
 import * as  SQLite from 'expo-sqlite';
