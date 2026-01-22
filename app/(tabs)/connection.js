@@ -6,11 +6,12 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import Zocial from '@expo/vector-icons/Zocial';
 import { useFocusEffect } from '@react-navigation/native';
 import Checkbox from 'expo-checkbox';
-import {useUser} from '@/context/userContext';
+import { useUser } from '@/context/userContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import {  z } from 'zod';
 
 
 const { height, width } = Dimensions.get('window');
@@ -26,6 +27,15 @@ export default function Connexion() {
     const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
     const router = useRouter();
     const [canSeePswd, setCanSeePswd] = useState(true);
+
+    const inscriptionSchema = z.object({
+        email: z.email({ message: "Adresse e-mail invalide" }).trim(),
+        password: z.string().min(3, { message: "Le mot de passe doit contenir au moins 6 caractères" }).trim(),
+        name: z.string().optional(),
+        picture: z.string().optional(),
+
+    })
+
     // const fetchSession = async () => {
     //     if (isSelected) {
     //         const session = await getSession();
@@ -66,7 +76,6 @@ export default function Connexion() {
 
         useCallback(() => {
             fetchSession();
-
         }, [isSelected, user]),
     )
 
@@ -74,31 +83,38 @@ export default function Connexion() {
 
 
     const valideUser = () => {
-        if (personne.email.trim() && personne.password.trim()) {
-            if (personne.password.trim()) {
-                const user = getUserInBd(personne.email, personne.password);
-                if (user !== false) {
-                    setUser(user);
-                    // const session = {
-                    //     email: user.email,
-                    //     password: user.password
-                    // };
-                    // await saveSession(session)
-                    // console.log(user,'userContext')
-                    router.push("/acceuil");
-                } else {
-                    alert('Mot de passe incorrecte')
-                }
 
-
-            } else {
-
-                alert('Utilisateur non trouvable');
-            }
-        } else {
-            alert('Tous les champs doivent être remplis');
-
+        const validation = inscriptionSchema.safeParse(personne);
+        // if (personne.email.trim() && personne.password.trim()) {
+        //     if (personne.password.trim()) {
+        if (!validation.success) {
+            const errors = validation.error.issues.map((err) => err.message).join('\n');
+            alert(errors);
+            return;
         }
+        const user = getUserInBd(personne.email, personne.password);
+        if (user !== false) {
+            setUser(user);
+            // const session = {
+            //     email: user.email,
+            //     password: user.password
+            // };
+            // await saveSession(session)
+            // console.log(user,'userContext')
+            router.push("/acceuil");
+        } else {
+            alert('Mot de passe incorrecte')
+        }
+
+
+        //     } else {
+
+        //         alert('Utilisateur non trouvable');
+        //     }
+        // } else {
+        //     alert('Tous les champs doivent être remplis');
+
+        // }
 
     };
 
@@ -135,7 +151,7 @@ export default function Connexion() {
                             style={styles.input}
                             placeholder={'Entrer votre e-mail'}
                             placeholderTextColor="black"
-                            autoComplete= {true}
+                            autoComplete={true}
                             value={personne.email}
                             onChangeText={(mail) => setPersonne({ ...personne, email: mail })}
                         />

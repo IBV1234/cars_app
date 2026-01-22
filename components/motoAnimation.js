@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { View, Image, Dimensions } from 'react-native';
-
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withRepeat, cancelAnimation, Easing } from 'react-native-reanimated';
 const { height, width } = Dimensions.get('window');
 
@@ -46,7 +45,7 @@ export default function MotorAnimation({ height, left, widthImage, heightImage, 
     }, [startRotation,finishAnimation])
 
     useEffect(() => {
-        console.log("finishAnimation", finishAnimation)
+        // console.log("finishAnimation", finishAnimation)
         if (finishAnimation && !startRotation) {
             linearMouvement.value = withTiming(-width, {
                     duration: 1000,
