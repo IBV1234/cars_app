@@ -85,8 +85,7 @@ export default function Connexion() {
     const valideUser = () => {
 
         const validation = inscriptionSchema.safeParse(personne);
-        // if (personne.email.trim() && personne.password.trim()) {
-        //     if (personne.password.trim()) {
+
         if (!validation.success) {
             const errors = validation.error.issues.map((err) => err.message).join('\n');
             alert(errors);
@@ -105,17 +104,6 @@ export default function Connexion() {
         } else {
             alert('Mot de passe incorrecte')
         }
-
-
-        //     } else {
-
-        //         alert('Utilisateur non trouvable');
-        //     }
-        // } else {
-        //     alert('Tous les champs doivent être remplis');
-
-        // }
-
     };
 
 
