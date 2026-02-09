@@ -1,11 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter, Link } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { StyleSheet, Text, View, Image, Dimensions, Pressable, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { validerEmail, BoolValideUserInBd, insertUserViaApiIntoDB } from '@/fonctions/utils';
-import * as Google from 'expo-auth-session/providers/google';
+// import * as Google from 'expo-auth-session/providers/google';
+import { useGoogleAuth } from '@/fonctions/googleAuth';
 import { insertUserInBd } from '../../fonctions/utils';
 import {Buttons} from '@/components/custom/custom';
 // import * as WebBrowser from 'expo-web-browser';
@@ -18,23 +19,24 @@ export default function Inscription() {
 
     const [personne, setPersonne] = useState({ name: '', email: '', password: '', passwordConfirm: '', picture: '' });
     const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
+       const { signInWithGoogle, request } = useGoogleAuth();
 
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        androidClientId: '953087995572-t53cgt672h8197tu0r5kut283dkio09p.apps.googleusercontent.com',
-        iosClientId: '953087995572-4h6bfbj4nlds70b9d0djdbgomjrco76m.apps.googleusercontent.com',
-    });
+    // const [request, response, promptAsync] = Google.useAuthRequest({
+    //     androidClientId: '953087995572-t53cgt672h8197tu0r5kut283dkio09p.apps.googleusercontent.com',
+    //     iosClientId: '953087995572-4h6bfbj4nlds70b9d0djdbgomjrco76m.apps.googleusercontent.com',
+    // });
     // const { personne, setPersonne } = useContext(UserNameContex); // Utilisation du contexte
     const router = useRouter();
 
-    useEffect(() => {
-        if (response?.type === 'succes') {
-            const { authentication } = response;
-            console.log('TOKEN', authentication.accessToken);
+    // useEffect(() => {
+    //     if (response?.type === 'succes') {
+    //         const { authentication } = response;
+    //         console.log('TOKEN', authentication.accessToken);
 
-            fetchUserInfo(authentication.accessToken);
+    //         fetchUserInfo(authentication.accessToken);
 
-        }
-    }, [response]);
+    //     }
+    // }, [response]);
 
 
 
@@ -71,24 +73,24 @@ export default function Inscription() {
 
 
 
-    async function fetchUserInfo(token) {
-        const res = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-            headers: { Authorization: `Bearer ${token}` },//Le mot Bearer indique au serveur qu’on utilise un jeton d’accès OAuth2.
-        });
-        const user = await res.json();
-        console.log('User Info:', user);
-
+    async function connexionWGoogle() {
+       const result = await signInWithGoogle();
+       if (result.success) {
+        const { user } = result;
         const newUser = {
-            google_id: user.id,
+            google_id: user.google_id,
             name: user.name,
             email: user.email,
-            picture: user.picture ?? '',
-            password: '',
-            admin: 0
+            password: user.password,
+            picture: user.picture,
         };
+        console.log('User newUser:', newUser);
 
-        setUserWithApi(newUser);
-        insertUserViaApiIntoDB(userWithApi);
+       }
+
+
+        // setUserWithApi(newUser);
+        // insertUserViaApiIntoDB(userWithApi);
 
     }
 
@@ -172,7 +174,7 @@ export default function Inscription() {
             </View>
 
             <View style={styles.iconsContainerInscription}>
-                <Pressable onPress={() => console.log('Google Pressed')}>
+                <Pressable onPress={() => connexionWGoogle() } disabled ={!request} > Le bouton est désactivé tant que la requête n'est pas prête
                     <Image source={require('@/assets/images/google_logo.jpg')} style={{ width: 60, height: 60, borderRadius: 20 }} />
                 </Pressable>
             </View>

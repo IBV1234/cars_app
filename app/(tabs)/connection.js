@@ -1,17 +1,19 @@
 
 import { Buttons } from '@/components/custom/custom';
+import { useUser } from '@/context/userContext';
+import { useGoogleAuth } from '@/fonctions/googleAuth';
 import { getUserInBd } from '@/fonctions/utils';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Fontisto from '@expo/vector-icons/Fontisto';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Zocial from '@expo/vector-icons/Zocial';
 import { useFocusEffect } from '@react-navigation/native';
 import Checkbox from 'expo-checkbox';
-import { useUser } from '@/context/userContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import {  z } from 'zod';
+import { z } from 'zod';
 
 
 const { height, width } = Dimensions.get('window');
@@ -22,11 +24,13 @@ export default function Connexion() {
 
     const { user, setUser } = useUser();
     const { isSelected, setSelection } = useContext(RememberMeContext);
+    const { signInWithGoogle } = useGoogleAuth();
 
     const [personne, setPersonne] = useState({ name: '', email: 'Zack@gmail.com', password: '123', picture: '' });
     const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
     const router = useRouter();
     const [canSeePswd, setCanSeePswd] = useState(true);
+    const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
 
     const inscriptionSchema = z.object({
         email: z.email({ message: "Adresse e-mail invalide" }).trim(),
@@ -106,6 +110,43 @@ export default function Connexion() {
         }
     };
 
+    const handleGoogleLogin = async () => {
+        setIsLoadingGoogle(true);
+        try {
+            const result = await signInWithGoogle();
+            
+            if (result.success) {
+                const googleUser = result.user;
+                
+                // Essayer de trouver l'utilisateur dans la BD
+                let dbUser = getUserInBd(googleUser.email, googleUser.google_id);
+                
+                if (!dbUser) {
+                    // Si l'utilisateur n'existe pas, créer un nouvel utilisateur
+                    dbUser = {
+                        google_id: googleUser.google_id,
+                        name: googleUser.name,
+                        email: googleUser.email,
+                        picture: googleUser.picture,
+                        password: googleUser.google_id // Utiliser Google ID comme mot de passe
+                    };
+                    // Vous devriez enregistrer cet utilisateur dans votre BD
+                }
+                
+                setUser(dbUser);
+                setPersonne({ name: '', email: '', password: '', picture: '' });
+                router.push("/acceuil");
+            } else {
+                alert('Erreur lors de la connexion avec Google');
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Erreur lors de la connexion');
+        } finally {
+            setIsLoadingGoogle(false);
+        }
+    };
+
 
     return (
         <View style={styles.containerConnexion} >
@@ -171,6 +212,21 @@ export default function Connexion() {
             </LinearGradient>
 
             <Buttons text={'Connextion'} fonction={valideUser} />
+
+            {/* Botão Google Login */}
+            <Pressable
+                onPress={handleGoogleLogin}
+                disabled={isLoadingGoogle}
+                style={({ pressed }) => [
+                    styles.googleButton,
+                    pressed ? { opacity: 0.7 } : {}
+                ]}
+            >
+                <MaterialCommunityIcons name="google" size={24} color="white" />
+                <Text style={styles.googleButtonText}>
+                    {isLoadingGoogle ? 'Connexion...' : 'Connexion avec Google'}
+                </Text>
+            </Pressable>
 
         </View>
     );// backgroundColor: '#8B0000'
@@ -255,6 +311,28 @@ const styles = StyleSheet.create({
     carLogo: {
         height: height * 0.26,
         width: width,
+    },
+    googleButton: {
+        flexDirection: 'row',
+        backgroundColor: 'rgba(66, 133, 244, 0.9)',
+        marginTop: 20,
+        marginHorizontal: 20,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.4,
+        shadowRadius: 2,
+        gap: 10,
+    },
+    googleButtonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: '600',
     },
 });
 
