@@ -8,7 +8,7 @@ import { validerEmail, BoolValideUserInBd, insertUserViaApiIntoDB } from '@/fonc
 // import * as Google from 'expo-auth-session/providers/google';
 import { useGoogleAuth } from '@/fonctions/googleAuth';
 import { insertUserInBd } from '../../fonctions/utils';
-import {Buttons} from '@/components/custom/custom';
+import { Buttons } from '@/components/custom/custom';
 // import * as WebBrowser from 'expo-web-browser';
 // import * as AuthSession from 'expo-auth-session';
 
@@ -19,7 +19,7 @@ export default function Inscription() {
 
     const [personne, setPersonne] = useState({ name: '', email: '', password: '', passwordConfirm: '', picture: '' });
     const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
-       const { signInWithGoogle, request } = useGoogleAuth();
+    const { signIn } = useGoogleAuth();
 
     // const [request, response, promptAsync] = Google.useAuthRequest({
     //     androidClientId: '953087995572-t53cgt672h8197tu0r5kut283dkio09p.apps.googleusercontent.com',
@@ -46,7 +46,7 @@ export default function Inscription() {
             if (validerEmail(personne.email)) {
                 if (personne.password.trim() === personne.passwordConfirm.trim()) {
                     if (!BoolValideUserInBd(personne.email, personne.password)) {
-                       console.log("bool: insertUserInBd",insertUserInBd(personne));
+                        console.log("bool: insertUserInBd", insertUserInBd(personne));
 
                         if (insertUserInBd(personne)) {
                             console.log("aller à l'index");
@@ -74,112 +74,109 @@ export default function Inscription() {
 
 
     async function connexionWGoogle() {
-       const result = await signInWithGoogle();
-       if (result.success) {
-        const { user } = result;
-        const newUser = {
-            google_id: user.google_id,
-            name: user.name,
-            email: user.email,
-            password: user.password,
-            picture: user.picture,
-        };
-        console.log('User newUser:', newUser);
-
-       }
-
-
-        // setUserWithApi(newUser);
-        // insertUserViaApiIntoDB(userWithApi);
+        const result = await signIn();
+        //    if (result.success) {
+        //     const { user } = result;
+        //     const newUser = {
+        //         google_id: user.google_id,
+        //         name: user.name,
+        //         email: user.email,
+        //         password: user.password,
+        //         picture: user.picture,
+        //     };
+        console.log('result:', result);
 
     }
 
 
-
-    return (
-        <View style={styles.containerConnexion}>
-
-
-            <LinearGradient style={[styles.ContainerArrow, { marginTop: 40, marginLeft: 20 }]}
-                colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
-                start={{ x: 0.5, y: 0 }}
-                end={{ x: 0.1, y: 1.2 }}>
-                <Link href={"/"} >
-                    <View >
-                        <FontAwesome name="arrow-left" size={25} color="white" />
-                    </View>
-                </Link>
-            </LinearGradient>
+    // setUserWithApi(newUser);
+    // insertUserViaApiIntoDB(userWithApi);
 
 
-            <LinearGradient style={styles.containerConnexion2}
-                colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
-                start={{ x: 0.5, y: 0 }}
-                end={{ x: 0.1, y: 1.2 }}>
-                <View style={styles.containerInput}>
-                    <View style={{ width: 300, height: 50 }}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder={'Entrer votre nom'}
-                            placeholderTextColor="black"
-                            value={personne.name}
-                            onChangeText={(nom) => setPersonne({ ...personne, name: nom })}
-                        />
-                    </View>
-
-                    <View style={{ width: 300, height: 50, marginTop: 20 }}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder={'Entrer votre e-mail'}
-                            placeholderTextColor="black"
-                            value={personne.email}
-                            onChangeText={(mail) => setPersonne({ ...personne, email: mail })}
-                        />
-                    </View>
-
-                    <View style={{ width: 300, height: 50, marginTop: 20 }}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder={"Entrer votre mot de passe"}
-                            placeholderTextColor="black"
-                            value={personne.password}
-                            onChangeText={(mdp) => setPersonne({ ...personne, password: mdp })}
-                        />
-                    </View>
+return (
+    <View style={styles.containerConnexion}>
 
 
-
-                    <View style={{ width: 300, height: 50, marginTop: 20 }}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder={"Réentrer votre mot de passe"}
-                            placeholderTextColor="black"
-                            value={personne.passwordConfirm}
-                            onChangeText={(mdp) => setPersonne({ ...personne, passwordConfirm: mdp })}
-                        />
-                    </View>
+        <LinearGradient style={[styles.ContainerArrow, { marginTop: 40, marginLeft: 20 }]}
+            colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.1, y: 1.2 }}>
+            <Link href={"/"} >
+                <View >
+                    <FontAwesome name="arrow-left" size={25} color="white" />
                 </View>
-            </LinearGradient>
+            </Link>
+        </LinearGradient>
 
-    
 
-            <Buttons text={'Inscription'} fonction ={valideUser}/>
+        <LinearGradient style={styles.containerConnexion2}
+            colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.1, y: 1.2 }}>
+            <View style={styles.containerInput}>
+                <View style={{ width: 300, height: 50 }}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder={'Entrer votre nom'}
+                        placeholderTextColor="black"
+                        value={personne.name}
+                        onChangeText={(nom) => setPersonne({ ...personne, name: nom })}
+                    />
+                </View>
 
-            <View style={styles.orLine}>
-                <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}> ----------</Text>
+                <View style={{ width: 300, height: 50, marginTop: 20 }}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder={'Entrer votre e-mail'}
+                        placeholderTextColor="black"
+                        value={personne.email}
+                        onChangeText={(mail) => setPersonne({ ...personne, email: mail })}
+                    />
+                </View>
 
-                <Text style={{ color: 'black', fontSize: 18 }}> ou inscrivez vous avec</Text>
-                <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}> ----------</Text>
+                <View style={{ width: 300, height: 50, marginTop: 20 }}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder={"Entrer votre mot de passe"}
+                        placeholderTextColor="black"
+                        value={personne.password}
+                        onChangeText={(mdp) => setPersonne({ ...personne, password: mdp })}
+                    />
+                </View>
 
+
+
+                <View style={{ width: 300, height: 50, marginTop: 20 }}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder={"Réentrer votre mot de passe"}
+                        placeholderTextColor="black"
+                        value={personne.passwordConfirm}
+                        onChangeText={(mdp) => setPersonne({ ...personne, passwordConfirm: mdp })}
+                    />
+                </View>
             </View>
+        </LinearGradient>
 
-            <View style={styles.iconsContainerInscription}>
-                <Pressable onPress={() => connexionWGoogle() } disabled ={!request} > Le bouton est désactivé tant que la requête n'est pas prête
-                    <Image source={require('@/assets/images/google_logo.jpg')} style={{ width: 60, height: 60, borderRadius: 20 }} />
-                </Pressable>
-            </View>
+
+
+        <Buttons text={'Inscription'} fonction={valideUser} />
+
+        <View style={styles.orLine}>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}> ----------</Text>
+
+            <Text style={{ color: 'black', fontSize: 18 }}> ou inscrivez vous avec</Text>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}> ----------</Text>
+
         </View>
-    );
+
+        <View style={styles.iconsContainerInscription}>
+            <Pressable onPress={() => connexionWGoogle()}  > Le bouton est désactivé tant que la requête n'est pas prête
+                <Image source={require('@/assets/images/google_logo.jpg')} style={{ width: 60, height: 60, borderRadius: 20 }} />
+            </Pressable>
+        </View>
+    </View>
+);
 }
 
 

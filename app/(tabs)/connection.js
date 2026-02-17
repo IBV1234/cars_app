@@ -11,6 +11,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import Checkbox from 'expo-checkbox';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
+import { useRememberMe } from '@/context/rememberContext';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { z } from 'zod';
@@ -18,14 +19,12 @@ import { z } from 'zod';
 
 const { height, width } = Dimensions.get('window');
 // export const UserContex = createContext();
-export const RememberMeContext = createContext();
 
 export default function Connexion() {
 
     const { user, setUser } = useUser();
-    const { isSelected, setSelection } = useContext(RememberMeContext);
-    const { signInWithGoogle } = useGoogleAuth();
-
+    const { signIn } = useGoogleAuth();
+    const { isSelected, setSelection } = useRememberMe();
     const [personne, setPersonne] = useState({ name: '', email: 'Zack@gmail.com', password: '123', picture: '' });
     const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
     const router = useRouter();
