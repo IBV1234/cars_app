@@ -112,7 +112,7 @@ export default function Connexion() {
     const handleGoogleLogin = async () => {
         setIsLoadingGoogle(true);
         try {
-            const result = await signInWithGoogle();
+            const result = await signIn();
             
             if (result.success) {
                 const googleUser = result.user;

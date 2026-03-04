@@ -12,7 +12,7 @@ export const Buttons = ({ text, fonction, userouter = false, carData = null }) =
     return (
 
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <Pressable
+            <Pressable testID="inscription_button"
                 style={{ marginTop: 10 }}
                 onPress={() => {
                     return userouter && carData

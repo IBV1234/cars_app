@@ -13,11 +13,13 @@ export function useGoogleAuth() {
     });
 
     const signIn = async () => {
+
         if(!request) {
             console.error('Google Auth request not initialized');
             alert('Google Auth request not initialized');
             return null;
         }
+
         const result = await promptAsync();
         let authenticationResult = null;
         switch (result?.type) {

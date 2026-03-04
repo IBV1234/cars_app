@@ -1,17 +1,14 @@
 
 import React, { useState } from 'react';
 import { useRouter, Link } from 'expo-router';
+import { Alert } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { StyleSheet, Text, View, Image, Dimensions, Pressable, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { validerEmail, BoolValideUserInBd, insertUserViaApiIntoDB } from '@/fonctions/utils';
-// import * as Google from 'expo-auth-session/providers/google';
-import { useGoogleAuth } from '@/fonctions/googleAuth';
+// import { useGoogleAuth } from '@/fonctions/googleAuth';
 import { insertUserInBd } from '../../fonctions/utils';
 import { Buttons } from '@/components/custom/custom';
-// import * as WebBrowser from 'expo-web-browser';
-// import * as AuthSession from 'expo-auth-session';
-
 const { height, width } = Dimensions.get('window');
 
 export default function Inscription() {
@@ -19,25 +16,11 @@ export default function Inscription() {
 
     const [personne, setPersonne] = useState({ name: '', email: '', password: '', passwordConfirm: '', picture: '' });
     const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
-    const { signIn } = useGoogleAuth();
+    // const { signIn } = useGoogleAuth();
 
-    // const [request, response, promptAsync] = Google.useAuthRequest({
-    //     androidClientId: '953087995572-t53cgt672h8197tu0r5kut283dkio09p.apps.googleusercontent.com',
-    //     iosClientId: '953087995572-4h6bfbj4nlds70b9d0djdbgomjrco76m.apps.googleusercontent.com',
-    // });
+
     // const { personne, setPersonne } = useContext(UserNameContex); // Utilisation du contexte
     const router = useRouter();
-
-    // useEffect(() => {
-    //     if (response?.type === 'succes') {
-    //         const { authentication } = response;
-    //         console.log('TOKEN', authentication.accessToken);
-
-    //         fetchUserInfo(authentication.accessToken);
-
-    //     }
-    // }, [response]);
-
 
 
     const valideUser = () => {
@@ -54,129 +37,130 @@ export default function Inscription() {
                         }
                     } else {
 
-                        alert('Utilisateur non trouvable');
+                        Alert.alert('Utilisateur non trouvable');
                     }
                 } else {
-                    alert('Mot de passe non correspondant');
+                    Alert.alert('Mot de passe non correspondant');
 
                 }
             } else {
-                alert('Email non valide');
+                console.log("DEBUG: Je suis dans le bloc Email non valide"); 
+                Alert.alert('Email non valide');
 
             }
         } else {
 
-            alert('Tous les champs doivent être remplis');
+            Alert.alert('Tous les champs doivent être remplis');
         }
     };
 
 
 
 
-    async function connexionWGoogle() {
-        const result = await signIn();
-        //    if (result.success) {
-        //     const { user } = result;
-        //     const newUser = {
-        //         google_id: user.google_id,
-        //         name: user.name,
-        //         email: user.email,
-        //         password: user.password,
-        //         picture: user.picture,
-        //     };
-        console.log('result:', result);
+    // async function connexionWGoogle() {
+    //     const result = await signIn();
+    //     //    if (result.success) {
+    //     //     const { user } = result;
+    //     //     const newUser = {
+    //     //         google_id: user.google_id,
+    //     //         name: user.name,
+    //     //         email: user.email,
+    //     //         password: user.password,
+    //     //         picture: user.picture,
+    //     //     };
+    //     console.log('result:', result);
 
-    }
+    // }
 
 
     // setUserWithApi(newUser);
     // insertUserViaApiIntoDB(userWithApi);
 
 
-return (
-    <View style={styles.containerConnexion}>
+    return (
+        <View style={styles.containerConnexion}>
 
 
-        <LinearGradient style={[styles.ContainerArrow, { marginTop: 40, marginLeft: 20 }]}
-            colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.1, y: 1.2 }}>
-            <Link href={"/"} >
-                <View >
-                    <FontAwesome name="arrow-left" size={25} color="white" />
+            <LinearGradient style={[styles.ContainerArrow, { marginTop: 40, marginLeft: 20 }]}
+                colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
+                start={{ x: 0.5, y: 0 }}
+                end={{ x: 0.1, y: 1.2 }}>
+                <Link href={"/"} >
+                    <View >
+                        <FontAwesome name="arrow-left" size={25} color="white" />
+                    </View>
+                </Link>
+            </LinearGradient>
+
+
+            <LinearGradient style={styles.containerConnexion2}
+                colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
+                start={{ x: 0.5, y: 0 }}
+                end={{ x: 0.1, y: 1.2 }}>
+                <View style={styles.containerInput}>
+                    <View style={{ width: 300, height: 50 }}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={'Entrer votre nom'}
+                            placeholderTextColor="black"
+                            value={personne.name}
+                            onChangeText={(nom) => setPersonne({ ...personne, name: nom })}
+                        />
+                    </View>
+
+                    <View style={{ width: 300, height: 50, marginTop: 20 }}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={'Entrer votre e-mail'}
+                            placeholderTextColor="black"
+                            value={personne.email}
+                            onChangeText={(mail) => setPersonne({ ...personne, email: mail })}
+                        />
+                    </View>
+
+                    <View style={{ width: 300, height: 50, marginTop: 20 }}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={"Entrer votre mot de passe"}
+                            placeholderTextColor="black"
+                            value={personne.password}
+                            onChangeText={(mdp) => setPersonne({ ...personne, password: mdp })}
+                        />
+                    </View>
+
+
+
+                    <View style={{ width: 300, height: 50, marginTop: 20 }}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={"Réentrer votre mot de passe"}
+                            placeholderTextColor="black"
+                            value={personne.passwordConfirm}
+                            onChangeText={(mdp) => setPersonne({ ...personne, passwordConfirm: mdp })}
+                        />
+                    </View>
                 </View>
-            </Link>
-        </LinearGradient>
-
-
-        <LinearGradient style={styles.containerConnexion2}
-            colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.1, y: 1.2 }}>
-            <View style={styles.containerInput}>
-                <View style={{ width: 300, height: 50 }}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={'Entrer votre nom'}
-                        placeholderTextColor="black"
-                        value={personne.name}
-                        onChangeText={(nom) => setPersonne({ ...personne, name: nom })}
-                    />
-                </View>
-
-                <View style={{ width: 300, height: 50, marginTop: 20 }}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={'Entrer votre e-mail'}
-                        placeholderTextColor="black"
-                        value={personne.email}
-                        onChangeText={(mail) => setPersonne({ ...personne, email: mail })}
-                    />
-                </View>
-
-                <View style={{ width: 300, height: 50, marginTop: 20 }}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={"Entrer votre mot de passe"}
-                        placeholderTextColor="black"
-                        value={personne.password}
-                        onChangeText={(mdp) => setPersonne({ ...personne, password: mdp })}
-                    />
-                </View>
+            </LinearGradient>
 
 
 
-                <View style={{ width: 300, height: 50, marginTop: 20 }}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={"Réentrer votre mot de passe"}
-                        placeholderTextColor="black"
-                        value={personne.passwordConfirm}
-                        onChangeText={(mdp) => setPersonne({ ...personne, passwordConfirm: mdp })}
-                    />
-                </View>
+            <Buttons text={'Inscription'} fonction={valideUser} />
+
+            <View style={styles.orLine}>
+                <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}> ----------</Text>
+
+                <Text style={{ color: 'black', fontSize: 18 }}> ou inscrivez vous avec</Text>
+                <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}> ----------</Text>
+
             </View>
-        </LinearGradient>
 
-
-
-        <Buttons text={'Inscription'} fonction={valideUser} />
-
-        <View style={styles.orLine}>
-            <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}> ----------</Text>
-
-            <Text style={{ color: 'black', fontSize: 18 }}> ou inscrivez vous avec</Text>
-            <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}> ----------</Text>
-
+            {/* <View style={styles.iconsContainerInscription}>
+                <Pressable onPress={() => connexionWGoogle()}  >
+                    <Image source={require('@/assets/images/google_logo.jpg')} style={{ width: 60, height: 60, borderRadius: 20 }} />
+                </Pressable>
+            </View> */}
         </View>
-
-        <View style={styles.iconsContainerInscription}>
-            <Pressable onPress={() => connexionWGoogle()}  > Le bouton est désactivé tant que la requête n'est pas prête
-                <Image source={require('@/assets/images/google_logo.jpg')} style={{ width: 60, height: 60, borderRadius: 20 }} />
-            </Pressable>
-        </View>
-    </View>
-);
+    );
 }
 
 
