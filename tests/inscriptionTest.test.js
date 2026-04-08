@@ -4,7 +4,6 @@ import Inscription from '../(tabs)/inscription';
 import * as Utils from '../../fonctions/utils';
 import { Alert } from 'react-native'
 // import { useGoogleAuth } from '@/fonctions/googleAuth';
-import { useRouter } from 'expo-router';
 
 // Mocking the modules
 jest.mock('../../fonctions/utils', () => ({
@@ -30,16 +29,16 @@ jest.mock('@expo/vector-icons', () => ({
   FontAwesome: () => null, // retun null for all FontAwesome icons
 }));
 
-
-describe('Inscription Component', () => {
-
-  beforeEach(() => {
+beforeEach(() => {
     jest.spyOn(Alert, 'alert').mockImplementation(() => { });
   })
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+describe('Inscription Component', () => {
+
 
   it('renders the form correctly', () => {
     const { getByPlaceholderText, getByText } = render(<Inscription />);

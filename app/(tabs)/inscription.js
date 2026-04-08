@@ -12,17 +12,12 @@ import { Buttons } from '@/components/custom/custom';
 const { height, width } = Dimensions.get('window');
 
 export default function Inscription() {
-
-
     const [personne, setPersonne] = useState({ name: '', email: '', password: '', passwordConfirm: '', picture: '' });
-    const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
+    // const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
     // const { signIn } = useGoogleAuth();
-
-
     // const { personne, setPersonne } = useContext(UserNameContex); // Utilisation du contexte
     const router = useRouter();
-
-
+    
     const valideUser = () => {
         console.log(personne);
         if (personne.name.trim() && personne.email.trim() && personne.password.trim() && personne.passwordConfirm.trim()) {

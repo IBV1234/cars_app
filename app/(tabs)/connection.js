@@ -5,15 +5,16 @@ import { useGoogleAuth } from '@/fonctions/googleAuth';
 import { getUserInBd } from '@/fonctions/utils';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Fontisto from '@expo/vector-icons/Fontisto';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Checkbox } from 'expo-checkbox';
 import Zocial from '@expo/vector-icons/Zocial';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useFocusEffect } from '@react-navigation/native';
-import Checkbox from 'expo-checkbox';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
+import{validateUserLogin} from '@/fonctions/auth';
 import { useRememberMe } from '@/context/rememberContext';
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, {  useCallback, useState } from 'react';
+import { Alert, Dimensions, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { z } from 'zod';
 
 
@@ -23,14 +24,13 @@ const { height, width } = Dimensions.get('window');
 export default function Connexion() {
 
     const { user, setUser } = useUser();
-    const { signIn } = useGoogleAuth();
     const { isSelected, setSelection } = useRememberMe();
     const [personne, setPersonne] = useState({ name: '', email: 'Zack@gmail.com', password: '123', picture: '' });
-    const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
+    // const [userWithApi, setUserWithApi] = useState({ google_id: '', name: '', email: '', password: '', picture: '' });
     const router = useRouter();
     const [canSeePswd, setCanSeePswd] = useState(true);
     const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
-
+    const { signIn } = useGoogleAuth();
     const inscriptionSchema = z.object({
         email: z.email({ message: "Adresse e-mail invalide" }).trim(),
         password: z.string().min(3, { message: "Le mot de passe doit contenir au moins 6 caractères" }).trim(),
@@ -58,9 +58,9 @@ export default function Connexion() {
         }
     }
 
-    useEffect(() => {
-        fetchSession();
-    }, [isSelected]);
+    // useEffect(() => {
+    //     fetchSession();
+    // }, [isSelected]);
 
 
     useFocusEffect(
@@ -75,38 +75,45 @@ export default function Connexion() {
 
 
 
-    useFocusEffect(
+    // useFocusEffect(
 
-        useCallback(() => {
-            fetchSession();
-        }, [isSelected, user]),
-    )
+    //     useCallback(() => {
+    //         fetchSession();
+    //     }, [isSelected, user]),
+    // )
 
 
 
 
     const valideUser = () => {
+        validateUserLogin(
+            personne,
+            getUserInBd,
+            setUser,
+            router,
+            Alert,
+            inscriptionSchema.safeParse(personne)
+        );
+        // const validation = inscriptionSchema.safeParse(personne);
 
-        const validation = inscriptionSchema.safeParse(personne);
-
-        if (!validation.success) {
-            const errors = validation.error.issues.map((err) => err.message).join('\n');
-            alert(errors);
-            return;
-        }
-        const user = getUserInBd(personne.email, personne.password);
-        if (user !== false) {
-            setUser(user);
-            // const session = {
-            //     email: user.email,
-            //     password: user.password
-            // };
-            // await saveSession(session)
-            // console.log(user,'userContext')
-            router.push("/acceuil");
-        } else {
-            alert('Mot de passe incorrecte')
-        }
+        // if (!validation.success) {
+        //     const errors = validation.error.issues.map((err) => err.message).join('\n');
+        //     alert(errors);
+        //     return;
+        // }
+        // const user = getUserInBd(personne.email, personne.password);
+        // if (user !== false) {
+        //     setUser(user);
+        //     // const session = {
+        //     //     email: user.email,
+        //     //     password: user.password
+        //     // };
+        //     // await saveSession(session)
+        //     // console.log(user,'userContext')
+        //     router.push("/acceuil");
+        // } else {
+        //     alert('Mot de passe incorrecte')
+        // }
     };
 
     const handleGoogleLogin = async () => {
@@ -149,9 +156,6 @@ export default function Connexion() {
 
     return (
         <View style={styles.containerConnexion} >
-
-
-
             <LinearGradient style={[styles.ContainerArrow, { marginTop: 40, marginLeft: 20 }]}
                 colors={['rgba(218, 5, 5, 0.8)', 'rgba(0, 0, 0, 0.5)']} // Rouge en haut, noir en bas
                 start={{ x: 0.5, y: 0 }}
@@ -201,6 +205,7 @@ export default function Connexion() {
 
                     <View style={{ flexDirection: 'row', alignSelf: 'flex-start', gap: 10, marginTop: 10 }}>
                         <Checkbox
+                            testID='se souvenir de moi'
                             value={isSelected}
                             onValueChange={setSelection}
                             style={styles.checkbox}
@@ -212,7 +217,6 @@ export default function Connexion() {
 
             <Buttons text={'Connextion'} fonction={valideUser} />
 
-            {/* Botão Google Login */}
             <Pressable
                 onPress={handleGoogleLogin}
                 disabled={isLoadingGoogle}
@@ -315,13 +319,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'rgba(66, 133, 244, 0.9)',
         marginTop: 20,
-        marginHorizontal: 20,
-        paddingVertical: 12,
-        paddingHorizontal: 20,
         borderRadius: 20,
         height: 50,
+        width: width * 0.70,
         alignItems: 'center',
         justifyContent: 'center',
+        alignSelf: 'center',
         shadowColor: 'black',
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.4,

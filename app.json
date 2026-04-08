@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "cars_app",
-    "slug": "cars_app",
+    "slug": "carsapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -43,6 +43,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f74b4c9c-a5d8-40e2-9960-4149ee63df1b"
+      }
+    },
+    "owner": "ibv"
   }
 }

@@ -36,6 +36,7 @@ export function useGoogleAuth() {
                 alert('An error occurred during sign-in');
                 break;
         }
+        console.log("Redirect URI:", AuthSession.makeRedirectUri({ scheme: 'carsapp' }));
         return authenticationResult;
     };
 
