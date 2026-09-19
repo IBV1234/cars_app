@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Dimensions, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import MotorAnimation from '../../../components/motoAnimation';
-import { playSound, releaseSound, iphoneVibration, customAlert, stopSound } from '@/fonctions/utils';
+import { iphoneVibration, customAlert } from '@/fonctions/utils';
+import { playSound, releaseSound, stopSound } from '@/services/audioService';
 import { motorQuestions,rostComments } from '@/constants/carQuestions';
 const { height, width } = Dimensions.get('window')
 

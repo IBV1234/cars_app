@@ -1,12 +1,10 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { LikeProvider } from '@/context/likeContext';
+import { RememberMeProvider } from '@/context/rememberContext';
+import { UserProvider } from '@/context/userContext';
 import { useFonts } from 'expo-font';
-import { useState } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import {  RememberMeProvider } from '.././context/rememberContext';
-import { LikeContext} from './(tabs)/acceuil';
 import 'react-native-reanimated';
-import { UserProvider } from '@/context/userContext';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -15,31 +13,23 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
-  const [user, setUser] = useState({ google_id: '', name: '', email: '', password: '', picture: '', admin: 0 });
-  const [isSelected, setSelection] = useState(false);
-  const [likeIds, setLikeIds] = useState(new Set);
 
   if (!loaded) {
     // Async font loading only occurs in development.
     return null;
   }
 
-
   return (
     <UserProvider>
-      <LikeContext.Provider value= {{ likeIds, setLikeIds }}>
-      <RememberMeProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
-      </RememberMeProvider>
-    </LikeContext.Provider>
-    </UserProvider >
-
+      <LikeProvider>
+        <RememberMeProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+        </RememberMeProvider>
+      </LikeProvider>
+    </UserProvider>
   );
 }

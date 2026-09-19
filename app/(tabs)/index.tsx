@@ -2,12 +2,12 @@ import { Image } from 'expo-image';
 import { StyleSheet, View, Text, Dimensions, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from "expo-router";
-import * as  SQLite from 'expo-sqlite';
 import { useEffect } from 'react';
+import { db } from '@/services/db';
 
+export { db };
 
 const { height, width } = Dimensions.get('window');
-export const db = SQLite.openDatabaseSync('Cars.db');//nom:Issac
 
 export default function HomeScreen() {
   const router = useRouter();

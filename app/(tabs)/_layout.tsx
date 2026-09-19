@@ -1,9 +1,8 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
-
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { HapticTab } from '@/components/HapticTab';
+import { Platform, Pressable } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
@@ -15,9 +14,19 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[(colorScheme ?? 'light') as 'light' | 'dark'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
+        tabBarButton: (props: any) => (
+          <Pressable
+            {...props}
+            onPressIn={(ev) => {
+              if (Platform.OS === 'ios') {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
+              props.onPressIn?.(ev);
+            }}
+          />
+        ),
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {

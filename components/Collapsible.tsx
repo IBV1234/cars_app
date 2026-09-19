@@ -6,7 +6,6 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Background } from '@react-navigation/elements';
 
 export function Collapsible({ children, title ,style}: PropsWithChildren & { title: string ,style?:any}) {
   const [isOpen, setIsOpen] = useState(false);

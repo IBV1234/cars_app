@@ -6,13 +6,13 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Dimensions, FlatList, Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { db } from "./index";
+import { db } from "@/services/db";
 import { ShowCars } from "@/components/custom/custom";
+import { useLike } from "@/context/likeContext";
 
 const { height, width } = Dimensions.get("window");
-export const LikeContext = createContext();
 
 export default function Accueil() {
     const { refresh } = useLocalSearchParams()
@@ -20,7 +20,7 @@ export default function Accueil() {
     const [carsLogoData, setCarsLogoData] = useState([]);
     const [carsData, setCarsData] = useState([]);
     const { user } =  useUser();
-    const { likeIds, setLikeIds } = useContext(LikeContext);
+    const { likeIds, setLikeIds } = useLike();
     // const [likeIds, setLikeIds] = useState(new Set);// set est un  tableau like avec les ids  et  qui stocke des éléments uniques.
     const [loading, setLoading] = useState(true);
     const [numColumns, setNumColumns] = useState(2);
@@ -35,6 +35,8 @@ export default function Accueil() {
                 } else {
                     cars = db.getAllSync('SELECT * FROM Cars WHERE name LIKE ?;', ['%' + cardata + '%']);
                 }
+                console.log('cars', cars);
+                
                 if (cars.length > 0) {
                     setCarsData(addLink(cars));
                 } else {

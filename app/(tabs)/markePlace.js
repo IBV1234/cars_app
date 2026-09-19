@@ -1,16 +1,13 @@
 
-import React, { useState, useContext, useRef, useCallback } from 'react';
-import { useRouter, Link, useFocusEffect } from 'expo-router';
+import { AnimatadeBoutton } from '@/components/custom/custom';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Dimensions, Image, TextInput, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { insertCarsData, dropDownComponent, handleEditCar } from '../../fonctions/utils';
-import { Buttons,AnimatadeBoutton } from '@/components/custom/custom';
-import { dataLogo, dataCarTypes } from '../../constants/carsLogo';
-import * as  SQLite from 'expo-sqlite';
-import { db } from "./index";
-// import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { Link, useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useRef, useState } from 'react';
+import { Dimensions, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { dataCarTypes, dataLogo } from '../../constants/carsLogo';
+import { dropDownComponent, handleEditCar, insertCarsData } from '../../fonctions/utils';
 
 // import { UserContex, } from './connection';
 import { useUser } from '@/context/userContext';
@@ -36,7 +33,6 @@ export default function MarkePlace() {
 
             console.log(car);
 
-
             if (insertCarsData(car)) {
                 console.log("Voiture insérée,aller à l'index");
                 setTimeout(() => {
@@ -44,19 +40,14 @@ export default function MarkePlace() {
                 }, 2000);
 
             }
-
-
         } else {
             alert('Un champs est vide');
 
         }
-
-
     };
 
     useFocusEffect(
         useCallback(() => {
-
             if (imageRef.current && imageRef.current.fadeIn) {//essayer deux méthodes différentes pour lancer l'animation
                 imageRef.current.fadeIn(1000);
             } else if (imageRef.current && imageRef.current.animate) {
@@ -97,13 +88,11 @@ export default function MarkePlace() {
                     )
                         :
                         (
-
                             <Image source={{ uri: user.picture }} style={{
                                 width: width * 0.20,
                                 height: width * 0.20,
                                 borderRadius: (width * 0.20) / 2
                             }} resizeMode="cover" />
-
                         )
                     }
                 </View>
@@ -141,7 +130,6 @@ export default function MarkePlace() {
                                     height: 140,
                                     borderRadius: 20,
                                     objectFit: 'cover'
-
                                 }}
                             />
                         )
@@ -437,10 +425,3 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
 });
-
-
-/*
-
-   
-
-*/

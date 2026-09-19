@@ -1,28 +1,21 @@
-import React, { useContext, useState, useEffect, useCallback } from "react";
-import { useFocusEffect } from '@react-navigation/native';
-import { Link, useLocalSearchParams ,useRouter} from "expo-router";
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, Text, View, Dimensions, Pressable, Image, ScrollView } from "react-native";
+import { Link, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import { Dimensions, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Feather from '@expo/vector-icons/Feather';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import { ThemedText } from '@/components/ThemedText';
 import { Collapsible } from '@/components/Collapsible';
 import { Buttons } from '@/components/custom/custom';
+import { ThemedText } from '@/components/ThemedText';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Feather from '@expo/vector-icons/Feather';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-// import { UserContex } from './connection';
-import { LikeContext } from './acceuil';
-import { toogleLike, addLink, formatNumberWithThousandsSeparator } from '@/fonctions/utils';
 import { carsLocation } from "@/constants/carsPositions";
-
-import * as Localization from "expo-localization";
-import { I18n } from "i18n-js";
-import { db } from "./index";
-
+import { useLike } from '@/context/likeContext';
+import { formatNumberWithThousandsSeparator, toogleLike } from '@/fonctions/utils';
 
 const { height, width } = Dimensions.get("window");
 
@@ -30,17 +23,16 @@ export default function Details() {
     const { item } = useLocalSearchParams();
     const car = item ? JSON.parse(item) : null;
 
-    const { likeIds, setLikeIds } = useContext(LikeContext)
+    const { likeIds, setLikeIds } = useLike();
     const [loading, setLoading] = useState(true);
     const [cars, setCars] = useState(carsLocation);
-    
 
-    const func =()=>{
+
+    const func = () => {
         console.log('ok');
-
         return null;
     }
-    
+
 
     return (
         <LinearGradient style={styles.container}
@@ -71,9 +63,9 @@ export default function Details() {
                         shadowOpacity: 2,
                         shadowRadius: 2,
                     }}
-                     onPress={() => {
-                        toogleLike(car.id, setLikeIds);
-                    }}>
+                        onPress={() => {
+                            toogleLike(car.id, setLikeIds);
+                        }}>
                         {likeIds.has(car.id) ? (<AntDesign name={'heart'} size={27} color="#B22222" />) : (<AntDesign name={'heart'} size={27} color="#ffffffff" />)}
                     </Pressable>
                 </View>

@@ -1,12 +1,11 @@
-import { db } from "@/app/(tabs)/index";
+import { db } from "@/services/db";
 import { images } from "@/constants/carsLogo";
 import * as Location from 'expo-location';
 import moment from 'moment-timezone';
 import { Alert, Image,Vibration } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import * as Keychain from 'react-native-keychain';
-import { Audio } from 'expo-av';
-import { engineSounds } from '@/constants/carQuestions';
+export { playSound, releaseSound, stopSound } from '@/services/audioService';
 
 
 
@@ -81,16 +80,7 @@ export const addLink = (Data) => {
     });
 };
 
-const addLinkForSounds =(name,soundLinks)=>{
-    if (name&& name.length>0 ){
-        const soundLink = soundLinks[name]
-        if(!soundLink)
-            return null;
-  
-        return soundLink;
-    }   
-    return null
-}
+
 
 export const insertUserInBd = (personne) => {
     try {
@@ -331,52 +321,7 @@ export const toogleLike = (id, setLikeIds) => {
     })
 }
 
-let currentSound = null;
-export async  function playSound (link){
 
-    if(currentSound){
-        const status = await currentSound.getStatusAsync();
-        if(status.isPlaying){
-            console.log("is already playing")
-            return;
-        }
-                
-
-
-    }
-    const soundLink = addLinkForSounds(link,engineSounds);
-    if(!soundLink)
-        return;
-    const {sound} = await Audio.Sound.createAsync(soundLink);
-    currentSound = sound;
-    // console.log("currentSound #2",currentSound)
-        sound.setOnPlaybackStatusUpdate((status)=>{ // comme un event listener qui retourn l'état du son
-        if(status.didJustFinish){// regarde si le son est terminé et libère la mémoire éviter les ralentissements
-             sound.unloadAsync();
-            currentSound = null;
-        }
-     
-    })
-    await sound.playAsync();
-    }
-
-
-
-export async  function releaseSound (link){
-        const soundLink = addLinkForSounds(link,engineSounds);
-    if(!soundLink)
-        return;
-    const {sound} = await Audio.Sound.createAsync(soundLink);
-    sound.stopAsync();
-    sound.unloadAsync();
-}
-export async  function stopSound (link){
-        const soundLink = addLinkForSounds(link,engineSounds);
-    if(!soundLink)
-        return;
-    const {sound} = await Audio.Sound.createAsync(soundLink);
-    sound.stopAsync();
-}
 // export const permissionToLocation = async () => {
 //     try {
 //         const granted = PermissionsAndroid.request(

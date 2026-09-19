@@ -11,8 +11,7 @@ import { getLocation } from '../../fonctions/utils';
 import { useUser } from '@/context/userContext';
 import { Buttons } from '@/components/custom/custom';
 import MapView, { Marker } from 'react-native-maps';
-import { useFocusEffect } from '@react-navigation/native';
-
+import { useFocusEffect } from 'expo-router';
 const { height, width } = Dimensions.get('window');
 
 export default function CarsMap() {

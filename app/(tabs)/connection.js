@@ -8,7 +8,7 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import { Checkbox } from 'expo-checkbox';
 import Zocial from '@expo/vector-icons/Zocial';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import{validateUserLogin} from '@/fonctions/auth';
